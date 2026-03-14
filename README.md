@@ -505,4 +505,4 @@ When using `run.py`, two files are generated in the project root:
 - ChromaDB telemetry is disabled via `ANONYMIZED_TELEMETRY=False`.
  ## PPT 
 
- https://docs.google.com/presentation/d/1MeMuwfaMzgRw_mUjUUATSbX-KrdK56T6A3Mpw9QuWTo/edit?usp=sharing
+[https://docs.google.com/presentation/d/1MeMuwfaMzgRw_mUjUUATSbX-KrdK56T6A3Mpw9QuW](https://docs.google.com/presentation/d/1MeMuwfaMzgRw_mUjUUATSbX-KrdK56T6A3Mpw9QuWTo/edit?usp=sharing)
