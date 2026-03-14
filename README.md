@@ -130,7 +130,7 @@ nova-dine/
 ### 1. Clone the repo
 
 ```bash
-git clone <repo-url>
+git clone https://github.com/pragyankumar-kombee/Nova-Dine.git
 cd nova-dine
 ```
 
