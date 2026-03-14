@@ -127,8 +127,6 @@
     </div>
 </div>
 
-    </div>
-
     <script>
 const STATUS_COLORS = {completed:['rgba(16,185,129,0.15)','#34d399'],pending:['rgba(245,158,11,0.15)','#fbbf24'],shipped:['rgba(99,102,241,0.15)','#818cf8']};
 async function load() {
@@ -138,8 +136,8 @@ async function load() {
     if (!d.success) return;
     const s = d.summary;
     document.getElementById('s-total').textContent = s.total_orders;
-    document.getElementById('s-spent').textContent = \'₹\'+s.total_spent.toLocaleString();
-    document.getElementById('s-avg').textContent = \'₹\'+s.average_order;
+    document.getElementById('s-spent').textContent = '₹'+s.total_spent.toLocaleString();
+    document.getElementById('s-avg').textContent = '₹'+s.average_order;
     const tb = document.getElementById('ordersTable');
     tb.innerHTML = '';
     const sf = document.getElementById('statusFilter').value;

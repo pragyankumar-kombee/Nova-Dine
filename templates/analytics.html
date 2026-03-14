@@ -155,8 +155,6 @@
     </div>
 </div>
 
-    </div>
-
     <script>
 async function load() {
     const r = await fetch('/api/analytics/demand-forecast?days=30');
@@ -178,7 +176,7 @@ async function load() {
     });
     const avg = fd.reduce((s,p)=>s+p.total_forecast/30,0)/fd.length;
     document.getElementById('m-demand').textContent = Math.round(avg);
-    document.getElementById('m-order').textContent = \'₹\'+(Math.random()*200+150).toFixed(0);
+    document.getElementById('m-order').textContent = '₹'+(Math.random()*200+150).toFixed(0);
 }
 load();
 </script>

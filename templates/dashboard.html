@@ -214,8 +214,6 @@
     </main>
 </div>
 
-    </div>
-
     <script>
 async function load() {
     try {
@@ -251,7 +249,7 @@ async function load() {
             
             const len = ad.logs.length;
             document.getElementById('obs-tokens').textContent = Math.round(totalTokens / len) + ' tks';
-            document.getElementById('obs-cost').textContent = '$' + totalCost.toFixed(4);
+            document.getElementById('obs-cost').textContent = '$$' + totalCost.toFixed(4);
             document.getElementById('obs-time').textContent = (totalTime / len).toFixed(2) + 's';
         } else {
             document.getElementById('s-ai').textContent = '0';
