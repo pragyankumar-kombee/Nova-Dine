@@ -24,9 +24,10 @@ vector_store/
 # Uploads
 uploads/
 
-# Output files
-*.pdf
-*.docx
+# Output files (generated — not menu datasets)
+*_order_list.pdf
+*_order_list.docx
+*_menu_report.pdf
 
 # IDE
 .vscode/
