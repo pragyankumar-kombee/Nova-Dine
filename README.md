@@ -503,3 +503,6 @@ When using `run.py`, two files are generated in the project root:
 - MongoDB references in `database/models.py` are legacy — the active database is PostgreSQL via SQLAlchemy.
 - The `backbone/` folder contains an async pipeline used by `run.py`. The web app (`main_app.py`) uses its own synchronous AI functions directly.
 - ChromaDB telemetry is disabled via `ANONYMIZED_TELEMETRY=False`.
+ ## PPT 
+
+ https://docs.google.com/presentation/d/1MeMuwfaMzgRw_mUjUUATSbX-KrdK56T6A3Mpw9QuWTo/edit?usp=sharing
