@@ -1,131 +1,141 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
-    <meta name="description" content="Nova Dine - The ultimate operational Backbone Layer for restaurant management. Predict inventory, run analysis, and elevate dining experiences with intelligent AI.">
-    <meta name="keywords" content="Restaurant AI, Inventory Management, Menu Analysis, Food Cost Optimization, Culina, Culinary AI">
-    <!-- Static Assets -->
-    <link rel="stylesheet" href="/static/css/style.css">
-    <script src="/static/js/main.js" defer></script>
-
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Menu Upload - Nova Dine</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta name="description" content="Nova Dine - Upload your restaurant menu to extract dishes and ingredients with AI.">
+    <title>Menu Upload — Nova Dine</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="/static/js/main.js" defer></script>
     <style>
-
         :root {
-            --pure-white: #ffffff;
-            --off-white: #f9fafb;
-            --gray-50: #f3f4f6;
-            --gray-100: #e5e7eb;
-            --gray-700: #374151;
-            --gray-900: #111827;
-            --accent: #6366f1;
-            --accent-soft: #e0e7ff;
-            
-            /* Old variables mapped to light theme for compatibility */
-            --bg: #ffffff;
-            --bg-primary: #f9fafb;
-            --bg2: #f3f4f6;
-            --bg-secondary: #ffffff;
-            --card: #ffffff;
-            --bg-card: #ffffff;
-            --bg-hover: #f3f4f6;
-            --border: #e5e7eb;
-            --green: #10b981;
-            --amber: #f59e0b;
-            --red: #ef4444;
-            --text: #111827;
-            --text-primary: #111827;
-            --text-secondary: #374151;
-            --muted: #6b7280;
-            --text-muted: #6b7280;
-            --user-bubble: #6366f1;
-            --bot-bubble: #f3f4f6;
-            --accent2: #10b981;
-            --accent3: #f59e0b;
-            --accent-red: #ef4444;
-            --accent-glow: rgba(99,102,241,0.1);
+            --bg: #ffffff; --bg2: #f3f4f6; --card: #ffffff; --border: #e5e7eb;
+            --text: #111827; --muted: #6b7280; --accent: #6366f1;
+            --green: #10b981; --amber: #f59e0b; --red: #ef4444;
         }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg2); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--off-white);
-            color: var(--gray-900);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-        .container { flex: 1; }
-        .upload-container {
-            background: var(--pure-white);
-            border-radius: 10px;
-            padding: 30px;
-            box-shadow: 0 2px 10px rgba(0,0,0,.1);
-            margin-top: 30px;
-        }
+        .page-wrap { max-width: 900px; margin: 32px auto; padding: 0 24px; flex: 1; }
+        .page-title { font-size: 1.4rem; font-weight: 700; margin-bottom: 4px; }
+        .page-sub { color: var(--muted); font-size: 0.88rem; margin-bottom: 28px; }
+
+        /* Drop zone */
         .drop-zone {
-            border: 2px dashed #dee2e6;
-            border-radius: 10px;
-            padding: 40px;
+            border: 2px dashed #c7d2fe;
+            border-radius: 14px;
+            padding: 52px 40px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.25s;
+            background: #fff;
         }
-        .drop-zone:hover {
-            border-color: #667eea;
-            background: #f8f9ff;
+        .drop-zone:hover, .drop-zone.dragover {
+            border-color: var(--accent);
+            background: #eef2ff;
         }
-        .drop-zone.dragover {
-            border-color: #667eea;
-            background: #f0f3ff;
+        .drop-zone .dz-icon { font-size: 2.5rem; color: var(--accent); margin-bottom: 14px; }
+        .drop-zone h3 { font-size: 1rem; font-weight: 600; margin-bottom: 6px; }
+        .drop-zone p { font-size: 0.83rem; color: var(--muted); margin-bottom: 0; }
+        .drop-zone .browse-btn {
+            display: inline-block; margin-top: 16px;
+            padding: 9px 22px; border-radius: 8px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: #fff; font-size: 0.85rem; font-weight: 600; cursor: pointer;
+            border: none; font-family: 'Inter', sans-serif;
         }
-        .file-info {
-            margin-top: 20px;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 5px;
+
+        /* File selected bar */
+        .file-bar {
+            display: none; align-items: center; gap: 12px;
+            background: #fff; border: 1px solid var(--border);
+            border-radius: 10px; padding: 14px 18px; margin-top: 14px;
         }
-        .result-card {
-            background: var(--pure-white);
-            border-radius: 10px;
-            padding: 20px;
-            margin-top: 20px;
-            border-left: 4px solid #667eea;
+        .file-bar .file-icon { font-size: 1.4rem; color: var(--accent); }
+        .file-bar .file-name { font-weight: 600; font-size: 0.88rem; flex: 1; }
+        .file-bar .file-size { font-size: 0.78rem; color: var(--muted); }
+        .file-bar .remove-btn { background: none; border: none; color: var(--red); cursor: pointer; font-size: 1rem; }
+
+        /* Upload button */
+        .upload-btn {
+            display: none; width: 100%; margin-top: 16px;
+            padding: 12px; border-radius: 10px; border: none;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: #fff; font-size: 0.95rem; font-weight: 700;
+            cursor: pointer; font-family: 'Inter', sans-serif;
+            transition: opacity 0.2s;
         }
-        .ingredient-badge {
-            background: #e9ecef;
-            padding: 5px 10px;
-            border-radius: 15px;
-            margin: 3px;
-            display: inline-block;
-            font-size: 0.9rem;
+        .upload-btn:hover { opacity: 0.88; }
+        .upload-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        /* Progress */
+        .progress-wrap { display: none; margin-top: 20px; }
+        .progress-bar-bg { background: #e0e7ff; border-radius: 8px; height: 8px; overflow: hidden; }
+        .progress-bar-fill { height: 8px; background: linear-gradient(90deg, #6366f1, #8b5cf6); border-radius: 8px; width: 0%; transition: width 0.4s; }
+        .progress-label { font-size: 0.8rem; color: var(--muted); margin-top: 8px; text-align: center; }
+
+        /* Results */
+        .results-wrap { display: none; margin-top: 28px; }
+        .section-card {
+            background: #fff; border: 1px solid var(--border);
+            border-radius: 14px; padding: 22px; margin-bottom: 16px;
         }
-        .loading {
-            display: none;
-            text-align: center;
-            padding: 40px;
+        .section-header {
+            display: flex; align-items: center; gap: 10px;
+            font-size: 1rem; font-weight: 700; margin-bottom: 18px;
+            padding-bottom: 12px; border-bottom: 1px solid var(--border);
         }
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #667eea;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
+        .section-header .icon { font-size: 1.2rem; }
+
+        /* Dish cards */
+        .dish-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+        .dish-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 14px; }
+        .dish-name { font-weight: 600; font-size: 0.9rem; margin-bottom: 4px; }
+        .dish-price { font-size: 0.78rem; color: var(--green); font-weight: 600; margin-bottom: 8px; }
+        .ing-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+        .ing-tag { background: #e0e7ff; color: #4338ca; padding: 2px 8px; border-radius: 20px; font-size: 0.72rem; font-weight: 500; }
+
+        /* Tables */
+        table { width: 100%; border-collapse: collapse; font-size: 0.83rem; }
+        th { background: rgba(99,102,241,0.08); color: #4338ca; padding: 10px 14px; text-align: left; font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.04em; }
+        td { padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: #fafafa; }
+
+        .badge { padding: 3px 10px; border-radius: 20px; font-size: 0.72rem; font-weight: 600; white-space: nowrap; }
+        .badge-found { background: rgba(16,185,129,0.12); color: #059669; }
+        .badge-missing { background: rgba(239,68,68,0.12); color: #dc2626; }
+        .badge-order { background: rgba(245,158,11,0.12); color: #d97706; }
+        .badge-ok { background: rgba(16,185,129,0.12); color: #059669; }
+
+        /* Cart */
+        .cart-actions { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+        .btn-cart { padding: 10px 22px; border-radius: 8px; border: none; font-family: 'Inter', sans-serif; font-weight: 600; cursor: pointer; font-size: 0.85rem; background: linear-gradient(135deg, #6366f1, #8b5cf6); color: #fff; }
+        .btn-cart:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-reset { padding: 10px 22px; border-radius: 8px; border: 1px solid var(--border); font-family: 'Inter', sans-serif; font-weight: 500; cursor: pointer; font-size: 0.85rem; background: #fff; color: var(--muted); }
+        .btn-reset:hover { background: var(--bg2); }
+
+        .cart-empty { color: var(--muted); font-size: 0.85rem; padding: 12px 0; }
+        .cart-total { margin-top: 12px; font-size: 0.85rem; color: var(--green); font-weight: 600; }
+
+        /* Summary bar */
+        .summary-bar {
+            display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px;
         }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .summary-pill {
+            background: #fff; border: 1px solid var(--border); border-radius: 10px;
+            padding: 10px 18px; font-size: 0.82rem; display: flex; align-items: center; gap: 8px;
         }
+        .summary-pill .num { font-size: 1.2rem; font-weight: 700; color: var(--accent); }
+
+        /* Error */
+        .error-box { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.3); border-radius: 10px; padding: 14px 18px; color: #dc2626; font-size: 0.85rem; margin-top: 14px; display: none; }
     </style>
 </head>
 <body>
-    
+
 <!-- UNIFIED HEADER -->
 <header class="main-header">
     <div class="header-container">
@@ -135,7 +145,7 @@
         <nav class="main-nav">
             <a href="/" class="nav-link">Home</a>
             <a href="/dashboard" class="nav-link">Dashboard</a>
-            <a href="/menu-upload" class="nav-link">Menu Upload</a>
+            <a href="/menu-upload" class="nav-link active">Menu Upload</a>
             <a href="/inventory" class="nav-link">Inventory</a>
             <a href="/chat" class="nav-link">AI Chat</a>
             <div class="nav-dropdown">
@@ -157,288 +167,104 @@
     </div>
 </header>
 
+<div class="page-wrap">
+    <div class="page-title">Menu Upload</div>
+    <div class="page-sub">Upload your menu PDF or text file — AI will extract dishes, check inventory, and generate order predictions</div>
 
-    <div class="container">
-        <div class="upload-container">
-            <h2>Upload Restaurant Menu</h2>
-            <p class="text-muted">Upload your menu (PDF or text file) to extract dishes and ingredients</p>
-
-            <!-- File Upload Zone -->
-            <div class="drop-zone" id="dropZone">
-                <input type="file" id="fileInput" accept=".pdf,.txt" style="display: none;">
-                <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#667eea" stroke-width="2">
-                    <path d="M12 16v-6M12 6h.01M12 16v-6M12 6h.01M4 4h16v16H4z"/>
-                </svg>
-                <h5 class="mt-3">Drag & drop your menu file here</h5>
-                <p class="text-muted">or click to browse</p>
-                <p class="text-muted small">Supported formats: PDF, TXT</p>
-            </div>
-
-            <!-- Loading Indicator -->
-            <div class="loading" id="loading">
-                <div class="spinner"></div>
-                <h5>Processing your menu...</h5>
-                <p class="text-muted">AI is extracting dishes and ingredients</p>
-            </div>
-
-            <!-- Results Section -->
-            <div id="results" style="display: none;">
-                <div class="result-card">
-                    <h4>📋 Extracted Menu Items</h4>
-                    <div id="dishesList"></div>
-                </div>
-
-                <div class="result-card">
-                    <h4>🥗 Ingredients Inventory Check</h4>
-                    <div id="inventoryCheck"></div>
-                </div>
-
-                <div class="result-card">
-                    <h4>📊 Quantity Predictions</h4>
-                    <div id="predictions"></div>
-                </div>
-
-                <div class="result-card">
-                    <h4>🛒 Generated Order Cart</h4>
-                    <div id="orderCart"></div>
-                    <button class="btn btn-primary mt-3" onclick="generateCart()">
-                        Generate Order Cart
-                    </button>
-                </div>
-            </div>
-        </div>
+    <!-- Drop Zone -->
+    <div class="drop-zone" id="dropZone">
+        <input type="file" id="fileInput" accept=".pdf,.txt" style="display:none;">
+        <div class="dz-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+        <h3>Drag & drop your menu file here</h3>
+        <p>Supports PDF and TXT formats</p>
+        <button class="browse-btn" onclick="document.getElementById('fileInput').click()">
+            <i class="fas fa-folder-open" style="margin-right:6px;"></i>Browse File
+        </button>
     </div>
 
-    <script>
-        const dropZone = document.getElementById('dropZone');
-        const fileInput = document.getElementById('fileInput');
-        const loading = document.getElementById('loading');
-        const results = document.getElementById('results');
+    <!-- File selected bar -->
+    <div class="file-bar" id="fileBar">
+        <i class="fas fa-file-pdf file-icon" id="fileIcon"></i>
+        <span class="file-name" id="fileName">—</span>
+        <span class="file-size" id="fileSize"></span>
+        <button class="remove-btn" onclick="resetUpload()" title="Remove"><i class="fas fa-times"></i></button>
+    </div>
 
-        // Handle drag & drop
-        dropZone.addEventListener('click', () => fileInput.click());
-        
-        dropZone.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            dropZone.classList.add('dragover');
-        });
+    <!-- Error box -->
+    <div class="error-box" id="errorBox"></div>
 
-        dropZone.addEventListener('dragleave', () => {
-            dropZone.classList.remove('dragover');
-        });
+    <!-- Upload button -->
+    <button class="upload-btn" id="uploadBtn" onclick="doUpload()">
+        <i class="fas fa-magic" style="margin-right:8px;"></i>Process Menu with AI
+    </button>
 
-        dropZone.addEventListener('drop', (e) => {
-            e.preventDefault();
-            dropZone.classList.remove('dragover');
-            const file = e.dataTransfer.files[0];
-            if (file) uploadFile(file);
-        });
+    <!-- Progress -->
+    <div class="progress-wrap" id="progressWrap">
+        <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressFill"></div></div>
+        <div class="progress-label" id="progressLabel">Uploading...</div>
+    </div>
 
-        fileInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file) uploadFile(file);
-        });
+    <!-- Results -->
+    <div class="results-wrap" id="resultsWrap">
 
-        async function uploadFile(file) {
-            // Show loading
-            dropZone.style.display = 'none';
-            loading.style.display = 'block';
-            results.style.display = 'none';
+        <!-- Summary -->
+        <div class="summary-bar" id="summaryBar"></div>
 
-            const formData = new FormData();
-            formData.append('menu', file);
-            formData.append('user_id', 1);
+        <!-- Dishes -->
+        <div class="section-card">
+            <div class="section-header">
+                <span class="icon">📋</span> Extracted Menu Items
+            </div>
+            <div class="dish-grid" id="dishesList"></div>
+        </div>
 
-            try {
-                const response = await fetch('/api/menu/upload', {
-                    method: 'POST',
-                    body: formData
-                });
+        <!-- Inventory Check -->
+        <div class="section-card">
+            <div class="section-header">
+                <span class="icon">🥗</span> Ingredients Inventory Check
+            </div>
+            <table>
+                <thead><tr><th>Ingredient</th><th>Matching Products</th><th>Status</th></tr></thead>
+                <tbody id="inventoryBody"></tbody>
+            </table>
+        </div>
 
-                const data = await response.json();
+        <!-- Predictions -->
+        <div class="section-card">
+            <div class="section-header">
+                <span class="icon">📊</span> 7-Day Quantity Predictions
+            </div>
+            <table>
+                <thead><tr><th>Ingredient</th><th>Current Stock</th><th>Predicted Need (7 days)</th><th>Recommended Order</th><th>Status</th></tr></thead>
+                <tbody id="predictionsBody"></tbody>
+            </table>
+        </div>
 
-                if (data.success) {
-                    displayResults(data.data);
-                } else {
-                    alert('Error: ' + data.error);
-                    resetUpload();
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('Error uploading file');
-                resetUpload();
-            }
-        }
+        <!-- Order Cart -->
+        <div class="section-card">
+            <div class="section-header">
+                <span class="icon">🛒</span> Generated Order Cart
+            </div>
+            <div id="cartContent"><p class="cart-empty">Click "Generate Order Cart" to build your order from items that need restocking.</p></div>
+            <div class="cart-actions">
+                <button class="btn-cart" id="cartBtn" onclick="generateCart()">
+                    <i class="fas fa-shopping-cart" style="margin-right:6px;"></i>Generate Order Cart
+                </button>
+                <button class="btn-reset" onclick="resetUpload()">
+                    <i class="fas fa-redo" style="margin-right:6px;"></i>Upload New Menu
+                </button>
+            </div>
+        </div>
 
-        function displayResults(data) {
-            // Display dishes
-            const dishesList = document.getElementById('dishesList');
-            dishesList.innerHTML = data.dishes.map(dish => `
-                <div class="mb-3">
-                    <strong>${dish.dish_name} <span class="text-success">(₹${dish.price_inr || 'N/A'})</span></strong>
-                    <div>
-                        ${dish.ingredients.map(i => 
-                            `<span class="ingredient-badge">${i}</span>`
-                        ).join('')}
-                    </div>
-                </div>
-            `).join('');
+    </div>
+</div>
 
-            // Display inventory check
-            const inventoryCheck = document.getElementById('inventoryCheck');
-            inventoryCheck.innerHTML = `
-                <table class="table table-sm">
-                    <thead>
-                        <tr>
-                            <th>Ingredient</th>
-                            <th>Matching Products</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${Object.entries(data.inventory_check).map(([ingredient, products]) => `
-                            <tr>
-                                <td><strong>${ingredient}</strong></td>
-                                <td>
-                                    ${products.length > 0 ? 
-                                        products.map(p => `${p.product_name} (${p.current_stock} ${p.unit})`).join('<br>') : 
-                                        '<span class="text-muted">No products matched</span>'
-                                    }
-                                </td>
-                                <td>
-                                    ${products.length > 0 ? 
-                                        '<span class="badge bg-success">Found</span>' : 
-                                        '<span class="badge bg-danger">Not in Inventory</span>'
-                                    }
-                                </td>
-                            </tr>
-                        `).join('')}
-                    </tbody>
-                </table>
-            `;
-
-            // Display predictions
-            const predictions = document.getElementById('predictions');
-            predictions.innerHTML = `
-                <table class="table table-sm">
-                    <thead>
-                        <tr>
-                            <th>Ingredient</th>
-                            <th>Current Stock</th>
-                            <th>Predicted Need (7 days)</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${data.predictions.map(p => `
-                            <tr>
-                                <td>${p.ingredient}</td>
-                                <td>${p.current_stock} ${p.unit}</td>
-                                <td>${p.predicted_need_7days} ${p.unit}</td>
-                                <td>
-                                    ${p.should_order ? 
-                                        '<span class="badge bg-warning">Order Needed</span>' : 
-                                        '<span class="badge bg-success">Sufficient</span>'
-                                    }
-                                </td>
-                            </tr>
-                        `).join('')}
-                    </tbody>
-                </table>
-            `;
-
-            // Hide loading, show results
-            loading.style.display = 'none';
-            results.style.display = 'block';
-        }
-
-        async function generateCart() {
-            try {
-                // Get ingredients from predictions
-                const predictions = document.querySelectorAll('#predictions table tbody tr');
-                const ingredients = [];
-                
-                predictions.forEach(row => {
-                    const ingredient = row.cells[0].textContent;
-                    const status = row.cells[3].querySelector('.badge');
-                    if (status && status.textContent === 'Order Needed') {
-                        ingredients.push(ingredient);
-                    }
-                });
-
-                const response = await fetch('/api/inventory/cart/generate', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({
-                        ingredients: ingredients,
-                        user_id: 1
-                    })
-                });
-
-                const data = await response.json();
-
-                if (data.success) {
-                    const orderCart = document.getElementById('orderCart');
-                    orderCart.innerHTML = `
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Ingredient</th>
-                                    <th>Product</th>
-                                    <th>Current Stock</th>
-                                    <th>Recommended Order</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${data.cart.map(item => `
-                                    <tr>
-                                        <td>${item.ingredient}</td>
-                                        <td>${item.product_name}</td>
-                                        <td>${item.current_stock} ${item.unit}</td>
-                                        <td><strong>${item.recommended_order} ${item.unit}</strong></td>
-                                    </tr>
-                                `).join('')}
-                            </tbody>
-                        </table>
-                        <p class="text-success">Total items to order: ${data.total_items}</p>
-                    `;
-                }
-            } catch (error) {
-                console.error('Error generating cart:', error);
-            }
-        }
-
-        function resetUpload() {
-            dropZone.style.display = 'block';
-            loading.style.display = 'none';
-            results.style.display = 'none';
-            fileInput.value = '';
-        }
-
-        async function loadLatestMenu() {
-            try {
-                const res = await fetch('/api/menu/latest?user_id=1');
-                const data = await res.json();
-                if(data.success && data.data) {
-                    displayResults(data.data);
-                }
-            } catch(e) {
-                console.error("No previous menu found");
-            }
-        }
-        document.addEventListener('DOMContentLoaded', loadLatestMenu);
-    </script>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-
-<!-- ── Nova Dine Unified Footer ── -->
+<!-- Footer -->
 <footer class="nova-footer">
     <div class="footer-grid">
         <div class="footer-brand">
-            <div class="footer-brand-name">
-                <i class="fas fa-utensils"></i> Nova Dine
-            </div>
-            <p>AI-powered restaurant inventory management. Predict demand, reduce waste, and streamline operations with intelligent automation.</p>
+            <div class="footer-brand-name"><i class="fas fa-utensils"></i> Nova Dine</div>
+            <p>AI-powered restaurant inventory management. Predict demand, reduce waste, and streamline operations.</p>
             <div class="footer-social">
                 <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
                 <a href="#" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
@@ -467,18 +293,240 @@
             <a href="/help">Help Center</a>
             <a href="/settings">Settings</a>
             <a href="/reports">Reports</a>
-            <a href="#">Documentation</a>
-            <a href="#">API Reference</a>
         </div>
     </div>
     <div class="footer-bottom">
-        <span>&copy; 2026 Nova Dine Systems &mdash; AI Backbone Layer. All rights reserved.</span>
-        <div class="footer-status">
-            <span class="status-dot"></span>
-            <span>All systems operational</span>
-        </div>
+        <span>&copy; 2026 Nova Dine Systems — AI Backbone Layer. All rights reserved.</span>
+        <div class="footer-status"><span class="status-dot"></span><span>All systems operational</span></div>
     </div>
 </footer>
 
+<script>
+    let selectedFile = null;
+    let lastData = null;
+
+    const dropZone   = document.getElementById('dropZone');
+    const fileInput  = document.getElementById('fileInput');
+    const fileBar    = document.getElementById('fileBar');
+    const uploadBtn  = document.getElementById('uploadBtn');
+    const progressWrap = document.getElementById('progressWrap');
+    const resultsWrap  = document.getElementById('resultsWrap');
+    const errorBox   = document.getElementById('errorBox');
+
+    // Drag & drop
+    dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+    dropZone.addEventListener('drop', e => {
+        e.preventDefault(); dropZone.classList.remove('dragover');
+        const f = e.dataTransfer.files[0];
+        if (f) setFile(f);
+    });
+    fileInput.addEventListener('change', e => { if (e.target.files[0]) setFile(e.target.files[0]); });
+
+    function setFile(f) {
+        selectedFile = f;
+        hideError();
+        document.getElementById('fileName').textContent = f.name;
+        document.getElementById('fileSize').textContent = (f.size / 1024).toFixed(1) + ' KB';
+        document.getElementById('fileIcon').className = f.name.endsWith('.pdf')
+            ? 'fas fa-file-pdf file-icon' : 'fas fa-file-alt file-icon';
+        fileBar.style.display = 'flex';
+        uploadBtn.style.display = 'block';
+        resultsWrap.style.display = 'none';
+        progressWrap.style.display = 'none';
+    }
+
+    async function doUpload() {
+        if (!selectedFile) return;
+        uploadBtn.disabled = true;
+        uploadBtn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right:8px;"></i>Processing...';
+        progressWrap.style.display = 'block';
+        resultsWrap.style.display = 'none';
+        hideError();
+        animateProgress();
+
+        const formData = new FormData();
+        formData.append('menu', selectedFile);
+        formData.append('user_id', 1);
+
+        try {
+            const res = await fetch('/api/menu/upload', { method: 'POST', body: formData });
+            const json = await res.json();
+            progressWrap.style.display = 'none';
+            if (json.success) {
+                lastData = json.data;
+                renderResults(json.data);
+            } else {
+                showError(json.error || 'Upload failed. Please try again.');
+            }
+        } catch (err) {
+            progressWrap.style.display = 'none';
+            showError('Network error — could not reach the server.');
+        } finally {
+            uploadBtn.disabled = false;
+            uploadBtn.innerHTML = '<i class="fas fa-magic" style="margin-right:8px;"></i>Process Menu with AI';
+        }
+    }
+
+    function animateProgress() {
+        const fill = document.getElementById('progressFill');
+        const label = document.getElementById('progressLabel');
+        const steps = [
+            [10, 'Uploading file...'],
+            [35, 'Extracting text from PDF...'],
+            [60, 'AI analysing dishes & ingredients...'],
+            [80, 'Checking inventory stock...'],
+            [92, 'Generating predictions...'],
+        ];
+        let i = 0;
+        const iv = setInterval(() => {
+            if (i >= steps.length) { clearInterval(iv); return; }
+            fill.style.width = steps[i][0] + '%';
+            label.textContent = steps[i][1];
+            i++;
+        }, 600);
+    }
+
+    function renderResults(data) {
+        // Summary bar
+        const sb = document.getElementById('summaryBar');
+        const lowCount = (data.predictions || []).filter(p => p.should_order).length;
+        sb.innerHTML = `
+            <div class="summary-pill"><span class="num">${(data.dishes || []).length}</span> Dishes Extracted</div>
+            <div class="summary-pill"><span class="num">${data.total_ingredients || 0}</span> Ingredients Found</div>
+            <div class="summary-pill"><span class="num" style="color:var(--amber);">${lowCount}</span> Need Reorder</div>
+        `;
+
+        // Dishes
+        const dl = document.getElementById('dishesList');
+        if (!data.dishes || data.dishes.length === 0) {
+            dl.innerHTML = '<p style="color:var(--muted);font-size:0.85rem;">No dishes extracted.</p>';
+        } else {
+            dl.innerHTML = data.dishes.map(d => `
+                <div class="dish-card">
+                    <div class="dish-name">${d.dish_name || d.name || 'Unknown'}</div>
+                    ${d.price_inr ? `<div class="dish-price">₹${d.price_inr}</div>` : ''}
+                    <div class="ing-tags">
+                        ${(d.ingredients || []).map(i => `<span class="ing-tag">${i}</span>`).join('')}
+                    </div>
+                </div>`).join('');
+        }
+
+        // Inventory check
+        const ib = document.getElementById('inventoryBody');
+        const inv = data.inventory_check || {};
+        if (Object.keys(inv).length === 0) {
+            ib.innerHTML = '<tr><td colspan="3" style="color:var(--muted);">No inventory data available.</td></tr>';
+        } else {
+            ib.innerHTML = Object.entries(inv).map(([ing, prods]) => `
+                <tr>
+                    <td><strong>${ing}</strong></td>
+                    <td>${prods.length > 0
+                        ? prods.map(p => `${p.product_name} <span style="color:var(--muted);">(${p.current_stock} ${p.unit})</span>`).join('<br>')
+                        : '<span style="color:var(--muted);">No match found</span>'}</td>
+                    <td>${prods.length > 0
+                        ? '<span class="badge badge-found"><i class="fas fa-check" style="margin-right:4px;"></i>In Stock</span>'
+                        : '<span class="badge badge-missing"><i class="fas fa-times" style="margin-right:4px;"></i>Not Found</span>'}</td>
+                </tr>`).join('');
+        }
+
+        // Predictions
+        const pb = document.getElementById('predictionsBody');
+        if (!data.predictions || data.predictions.length === 0) {
+            pb.innerHTML = '<tr><td colspan="5" style="color:var(--muted);">No predictions available.</td></tr>';
+        } else {
+            pb.innerHTML = data.predictions.map(p => `
+                <tr>
+                    <td><strong>${p.ingredient}</strong></td>
+                    <td>${p.current_stock} <span style="color:var(--muted);">${p.unit}</span></td>
+                    <td>${p.predicted_need_7days} <span style="color:var(--muted);">${p.unit}</span></td>
+                    <td>${p.recommended_order > 0
+                        ? `<strong style="color:var(--amber);">${p.recommended_order} ${p.unit}</strong>`
+                        : `<span style="color:var(--green);">—</span>`}</td>
+                    <td>${p.should_order
+                        ? '<span class="badge badge-order"><i class="fas fa-exclamation-triangle" style="margin-right:4px;"></i>Order Needed</span>'
+                        : '<span class="badge badge-ok"><i class="fas fa-check" style="margin-right:4px;"></i>Sufficient</span>'}</td>
+                </tr>`).join('');
+        }
+
+        // Reset cart
+        document.getElementById('cartContent').innerHTML = '<p class="cart-empty">Click "Generate Order Cart" to build your order from items that need restocking.</p>';
+        resultsWrap.style.display = 'block';
+        resultsWrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    async function generateCart() {
+        const btn = document.getElementById('cartBtn');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right:6px;"></i>Generating...';
+
+        // Collect ingredients marked "Order Needed"
+        const rows = document.querySelectorAll('#predictionsBody tr');
+        const ingredients = [];
+        rows.forEach(row => {
+            const badge = row.querySelector('.badge-order');
+            if (badge) ingredients.push(row.cells[0].textContent.trim());
+        });
+
+        if (ingredients.length === 0) {
+            document.getElementById('cartContent').innerHTML = '<p class="cart-empty" style="color:var(--green);"><i class="fas fa-check-circle" style="margin-right:6px;"></i>All ingredients are sufficiently stocked — no orders needed!</p>';
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-shopping-cart" style="margin-right:6px;"></i>Generate Order Cart';
+            return;
+        }
+
+        try {
+            const res = await fetch('/api/inventory/cart/generate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ingredients, user_id: 1 })
+            });
+            const data = await res.json();
+            if (data.success) {
+                const cc = document.getElementById('cartContent');
+                if (data.cart.length === 0) {
+                    cc.innerHTML = '<p class="cart-empty">No items require ordering at this time.</p>';
+                } else {
+                    cc.innerHTML = `
+                        <table>
+                            <thead><tr><th>Ingredient</th><th>Current Stock</th><th>Recommended Order</th></tr></thead>
+                            <tbody>
+                                ${data.cart.map(item => `
+                                    <tr>
+                                        <td><strong>${item.ingredient}</strong></td>
+                                        <td>${item.current_stock} <span style="color:var(--muted);">${item.unit}</span></td>
+                                        <td><strong style="color:var(--accent);">${item.recommended_order} ${item.unit}</strong></td>
+                                    </tr>`).join('')}
+                            </tbody>
+                        </table>
+                        <div class="cart-total"><i class="fas fa-check-circle" style="margin-right:6px;"></i>${data.total_items} item${data.total_items !== 1 ? 's' : ''} added to order cart</div>`;
+                }
+            }
+        } catch (e) {
+            document.getElementById('cartContent').innerHTML = '<p style="color:var(--red);">Error generating cart. Please try again.</p>';
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-shopping-cart" style="margin-right:6px;"></i>Generate Order Cart';
+        }
+    }
+
+    function resetUpload() {
+        selectedFile = null;
+        lastData = null;
+        fileInput.value = '';
+        fileBar.style.display = 'none';
+        uploadBtn.style.display = 'none';
+        progressWrap.style.display = 'none';
+        resultsWrap.style.display = 'none';
+        hideError();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function showError(msg) {
+        errorBox.textContent = '⚠ ' + msg;
+        errorBox.style.display = 'block';
+    }
+    function hideError() { errorBox.style.display = 'none'; }
+</script>
 </body>
 </html>
