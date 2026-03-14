@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta name="description" content="Nova Dine - The ultimate operational Backbone Layer for restaurant management. Predict inventory, run analysis, and elevate dining experiences with intelligent AI.">
+    <meta name="keywords" content="Restaurant AI, Inventory Management, Menu Analysis, Food Cost Optimization, Culina, Culinary AI">
+    <!-- Static Assets -->
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="/static/js/main.js" defer></script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nova Dine - Smart Restaurant Assistant</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- marked.js for markdown rendering -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        
+        :root {
+            --pure-white: #ffffff;
+            --off-white: #f9fafb;
+            --gray-50: #f3f4f6;
+            --gray-100: #e5e7eb;
+            --gray-700: #374151;
+            --gray-900: #111827;
+            --accent: #6366f1;
+            --accent-soft: #e0e7ff;
+            
+            /* Old variables mapped to light theme for compatibility */
+            --bg: #ffffff;
+            --bg-primary: #f9fafb;
+            --bg2: #f3f4f6;
+            --bg-secondary: #ffffff;
+            --card: #ffffff;
+            --bg-card: #ffffff;
+            --bg-hover: #f3f4f6;
+            --border: #e5e7eb;
+            --green: #10b981;
+            --amber: #f59e0b;
+            --red: #ef4444;
+            --text: #111827;
+            --text-primary: #111827;
+            --text-secondary: #374151;
+            --muted: #6b7280;
+            --text-muted: #6b7280;
+            --user-bubble: #6366f1;
+            --bot-bubble: #f3f4f6;
+            --accent2: #10b981;
+            --accent3: #f59e0b;
+            --accent-red: #ef4444;
+            --accent-glow: rgba(99,102,241,0.1);
+        }
+
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ---- TOPBAR ---- */
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            height: 56px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+            z-index: 100;
+        }
+        .topbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+        .topbar-brand .logo-icon {
+            width: 32px; height: 32px;
+            background: var(--user-bubble);
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px;
+        }
+        .topbar-nav { display: flex; gap: 4px; }
+        .topbar-nav a {
+            padding: 6px 14px;
+            border-radius: 6px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .topbar-nav a:hover, .topbar-nav a.active {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+        .topbar-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.78rem;
+            color: var(--accent2);
+        }
+        .status-dot {
+            width: 7px; height: 7px;
+            border-radius: 50%;
+            background: var(--accent2);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+
+        /* ---- MAIN LAYOUT ---- */
+        .main-layout {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* ---- SIDEBAR ---- */
+        .sidebar {
+            width: 300px;
+            flex-shrink: 0;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .sidebar-section {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+        .sidebar-title {
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+        .quick-chip {
+            display: block;
+            width: 100%;
+            text-align: left;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 9px 12px;
+            border-radius: 8px;
+            margin-bottom: 6px;
+            font-size: 0.82rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+        .quick-chip:hover {
+            background: var(--bg-hover);
+            border-color: var(--accent);
+            color: var(--text-primary);
+        }
+        .quick-chip i { margin-right: 8px; color: var(--accent); width: 14px; }
+
+        /* Recommendations panel */
+        .recommendations-list { overflow-y: auto; flex: 1; padding: 16px; }
+        .rec-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 10px;
+            transition: all 0.2s;
+        }
+        .rec-card:hover { border-color: var(--accent); transform: translateY(-1px); }
+        .rec-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+        .rec-name { font-size: 0.85rem; font-weight: 600; color: var(--text-primary); }
+        .rec-badge {
+            font-size: 0.68rem;
+            padding: 2px 7px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        .badge-order { background: rgba(239,68,68,0.15); color: #ef4444; border: 1px solid rgba(239,68,68,0.3); }
+        .badge-ok    { background: rgba(16,185,129,0.15); color: #10b981; border: 1px solid rgba(16,185,129,0.3); }
+        .badge-warn  { background: rgba(245,158,11,0.15); color: #f59e0b; border: 1px solid rgba(245,158,11,0.3); }
+        .rec-detail  { font-size: 0.78rem; color: var(--text-secondary); }
+        .rec-bar-bg  { background: var(--bg-hover); border-radius: 4px; height: 4px; margin-top: 8px; overflow: hidden; }
+        .rec-bar     { height: 4px; border-radius: 4px; transition: width 1s ease; }
+
+        /* ---- CHAT AREA ---- */
+        .chat-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+            scroll-behavior: smooth;
+        }
+        .chat-messages::-webkit-scrollbar { width: 5px; }
+        .chat-messages::-webkit-scrollbar-track { background: transparent; }
+        .chat-messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+        /* ---- MESSAGES ---- */
+        .message-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 20px;
+            animation: fadeUp 0.3s ease;
+        }
+        @keyframes fadeUp { from{opacity:0;transform:translateY(8px);} to{opacity:1;transform:translateY(0);} }
+
+        .message-row.user { flex-direction: row-reverse; }
+
+        .avatar {
+            width: 34px; height: 34px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+        .avatar.bot { background: var(--user-bubble); }
+        .avatar.user { background: #21262d; border: 1px solid var(--border); color: var(--text-secondary); }
+
+        .bubble {
+            max-width: 75%;
+            padding: 14px 18px;
+            border-radius: 16px;
+            font-size: 0.875rem;
+            line-height: 1.65;
+            position: relative;
+        }
+        .bubble.user {
+            background: var(--user-bubble);
+            color: #fff;
+            border-bottom-right-radius: 4px;
+        }
+        .bubble.bot {
+            background: var(--bot-bubble);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            border-bottom-left-radius: 4px;
+        }
+
+        .bubble .msg-time {
+            font-size: 0.7rem;
+            opacity: 0.5;
+            margin-top: 8px;
+            display: block;
+        }
+        .bubble .class-tag {
+            display: inline-block;
+            margin-top: 8px;
+            font-size: 0.68rem;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        .tag-PREDICTION { background: rgba(99,102,241,0.2); color: #818cf8; border: 1px solid rgba(99,102,241,0.3); }
+        .tag-INVENTORY  { background: rgba(16,185,129,0.2); color: #34d399; border: 1px solid rgba(16,185,129,0.3); }
+        .tag-MENU       { background: rgba(245,158,11,0.2); color: #fbbf24; border: 1px solid rgba(245,158,11,0.3); }
+        .tag-ORDER      { background: rgba(239,68,68,0.2); color: #f87171; border: 1px solid rgba(239,68,68,0.3); }
+        .tag-GENERAL    { background: rgba(139,148,158,0.2); color: #8b949e; border: 1px solid rgba(139,148,158,0.3); }
+
+        /* Markdown table rendering */
+        .bubble table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0;
+            font-size: 0.82rem;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .bubble th {
+            background: rgba(99,102,241,0.15);
+            color: #a5b4fc;
+            padding: 9px 12px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 1px solid rgba(99,102,241,0.3);
+            white-space: nowrap;
+        }
+        .bubble td {
+            padding: 8px 12px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-primary);
+        }
+        .bubble tr:last-child td { border-bottom: none; }
+        .bubble tr:hover td { background: rgba(0,0,0,0.03); }
+        /* Status cell coloring */
+        .bubble td:last-child { font-weight: 500; }
+
+        /* Scrollable table wrapper for wide tables */
+        .table-scroll-wrap { overflow-x: auto; margin: 12px 0; border-radius: 8px; }
+        .table-scroll-wrap table { margin: 0; }
+
+        /* Prose markdown styling in bubbles */
+        .bubble p { margin-bottom: 10px; line-height: 1.7; }
+        .bubble p:last-child { margin-bottom: 0; }
+        .bubble h1,.bubble h2,.bubble h3,.bubble h4 { font-weight: 700; margin: 14px 0 6px; color: var(--text-primary); }
+        .bubble h3 { font-size: 0.95rem; color: #a5b4fc; }
+        .bubble ul,.bubble ol { padding-left: 20px; margin: 8px 0 8px; }
+        .bubble li { margin-bottom: 5px; line-height: 1.6; }
+        .bubble strong { color: var(--text-primary); font-weight: 700; }
+        .bubble em { color: #a5b4fc; font-style: italic; }
+        .bubble blockquote { border-left: 3px solid var(--accent); padding-left: 12px; color: var(--text-secondary); margin: 10px 0; font-style: italic; }
+        .bubble code { 
+            background: rgba(0,0,0,0.3); 
+            border: 1px solid var(--border); 
+            padding: 2px 6px; 
+            border-radius: 4px; 
+            font-family: 'JetBrains Mono', 'Courier New', monospace; 
+            font-size: 0.8rem; 
+            color: #f59e0b; 
+        }
+        .bubble pre { 
+            background: #0d1117; 
+            border: 1px solid var(--border); 
+            border-radius: 8px; 
+            padding: 14px; 
+            overflow-x: auto; 
+            margin: 10px 0; 
+        }
+        .bubble pre code { background: none; border: none; padding: 0; color: #e6edf3; }
+        .bubble hr { border: none; border-top: 1px solid var(--border); margin: 12px 0; }
+
+        .typing-bubble {
+            background: var(--bot-bubble);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            border-bottom-left-radius: 4px;
+            padding: 14px 18px;
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+        .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--text-muted); animation: bounce 1.4s infinite; }
+        .dot:nth-child(2) { animation-delay: 0.2s; }
+        .dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes bounce { 0%,80%,100%{transform:translateY(0);} 40%{transform:translateY(-8px);} }
+
+        /* ---- INPUT BAR ---- */
+        .input-bar {
+            padding: 16px 24px 20px;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+        }
+        .input-row {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
+        .input-wrap {
+            flex: 1;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            padding: 4px 6px 4px 14px;
+            transition: border-color 0.2s;
+        }
+        .input-wrap:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+        #userInput {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            padding: 10px 0;
+            resize: none;
+        }
+        #userInput::placeholder { color: var(--text-muted); }
+        .send-btn {
+            width: 42px; height: 42px;
+            border-radius: 10px;
+            border: none;
+            background: var(--user-bubble);
+            color: var(--pure-white);
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 15px;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+        .send-btn:hover { opacity: 0.85; transform: scale(1.05); }
+        .send-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+        .input-hints {
+            display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px;
+        }
+        .hint-chip {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+        .hint-chip:hover { border-color: var(--accent); color: var(--text-primary); background: var(--bg-hover); }
+
+        /* welcome card */
+        .welcome-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px;
+            text-align: center;
+            max-width: 500px;
+            margin: 0 auto 24px;
+        }
+        .welcome-icon {
+            width: 60px; height: 60px;
+            background: var(--user-bubble);
+            border-radius: 16px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 24px;
+            margin: 0 auto 16px;
+        }
+        .welcome-card h2 { font-size: 1.1rem; font-weight: 700; margin-bottom: 8px; }
+        .welcome-card p { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6; }
+
+        /* Recommendation refresh btn */
+        .rec-refresh {
+            width: 100%;
+            background: transparent;
+            border: 1px dashed var(--border);
+            color: var(--text-secondary);
+            border-radius: 8px;
+            padding: 8px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+            margin-top: 4px;
+        }
+        .rec-refresh:hover { border-color: var(--accent); color: var(--accent); }
+
+        /* Insight pills below message */
+        .insight-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 10px;
+        }
+        .insight-pill {
+            background: rgba(99,102,241,0.1);
+            border: 1px solid rgba(99,102,241,0.25);
+            color: #a5b4fc;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .insight-pill:hover { background: rgba(99,102,241,0.2); }
+    </style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+
+<!-- UNIFIED HEADER -->
+<header class="main-header">
+    <div class="header-container">
+        <a href="/" class="brand-logo">
+            <i class="fas fa-utensils" style="color:#6366f1;"></i> Nova Dine
+        </a>
+        <nav class="main-nav">
+            <a href="/" class="nav-link">Home</a>
+            <a href="/dashboard" class="nav-link">Dashboard</a>
+            <a href="/menu-upload" class="nav-link">Menu Upload</a>
+            <a href="/inventory" class="nav-link">Inventory</a>
+            <a href="/chat" class="nav-link">AI Chat</a>
+            <div class="nav-dropdown">
+                <button class="nav-link dropdown-toggle">Operations <i class="fas fa-chevron-down" style="font-size:0.7rem;margin-left:4px;"></i></button>
+                <div class="dropdown-menu">
+                    <a href="/analytics">Analytics</a>
+                    <a href="/reports">Reports</a>
+                    <a href="/orders">Orders</a>
+                    <a href="/suppliers">Suppliers</a>
+                    <a href="/recipes">Recipes</a>
+                    <a href="/waste-management">Waste Mgmt</a>
+                    <a href="/staff">Staff</a>
+                </div>
+            </div>
+            <a href="/settings" class="nav-link">Settings</a>
+            <a href="/help" class="nav-link">Help</a>
+        </nav>
+        <button class="mobile-menu-btn"><i class="fas fa-bars"></i></button>
+    </div>
+</header>
+
+</div>
+
+<!-- MAIN LAYOUT -->
+<div class="main-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <!-- Quick Actions -->
+        <div class="sidebar-section">
+            <div class="sidebar-title"><i class="fas fa-bolt" style="margin-right:5px;"></i>Quick Actions</div>
+            <button class="quick-chip" onclick="sendQuick('What ingredients are low in stock right now?')">
+                <i class="fas fa-exclamation-triangle"></i>Low Stock Alert
+            </button>
+            <button class="quick-chip" onclick="sendQuick('Predict ingredient needs for Chicken, Rice, and Butter for next week.')">
+                <i class="fas fa-chart-line"></i>7-Day Prediction
+            </button>
+            <button class="quick-chip" onclick="sendQuick('Based on my uploaded menu, what should I restock immediately?')">
+                <i class="fas fa-shopping-cart"></i>Restock from Menu
+            </button>
+            <button class="quick-chip" onclick="sendQuick('Which dishes on my menu have the highest ingredient cost?')">
+                <i class="fas fa-tag"></i>Cost Analysis
+            </button>
+            <button class="quick-chip" onclick="sendQuick('Suggest ingredient substitutes for Cream and Butter if stock is low.')">
+                <i class="fas fa-sync-alt"></i>Find Substitutes
+            </button>
+            <button class="quick-chip" onclick="sendQuick('What are the top 5 ingredients I order the most?')">
+                <i class="fas fa-star"></i>Top Ingredients
+            </button>
+        </div>
+
+        <!-- AI Recommendations -->
+        <div class="sidebar-section">
+            <div class="sidebar-title"><i class="fas fa-lightbulb" style="margin-right:5px;"></i>Live Recommendations</div>
+        </div>
+        <div class="recommendations-list" id="recList">
+            <div style="color:var(--text-muted);font-size:0.8rem;text-align:center;padding:20px;">
+                <i class="fas fa-spinner fa-spin" style="margin-bottom:8px;display:block;font-size:18px;"></i>
+                Loading recommendations...
+            </div>
+        </div>
+        <div style="padding:12px;">
+            <button class="rec-refresh" onclick="loadRecommendations()">
+                <i class="fas fa-redo" style="margin-right:5px;"></i>Refresh Recommendations
+            </button>
+        </div>
+    </aside>
+
+    <!-- CHAT AREA -->
+    <div class="chat-area">
+        <div class="chat-messages" id="chatMessages">
+            <!-- Welcome card -->
+            <div class="welcome-card" id="welcomeCard">
+                <div class="welcome-icon"><i class="fas fa-robot"></i></div>
+                <h2>Culina Restaurant AI</h2>
+                <p>I analyze your menu, inventory, and order history to provide intelligent restocking predictions, cost insights, and operational recommendations.</p>
+            </div>
+
+            <!-- Initial bot message -->
+            <div class="message-row" id="initMsg">
+                <div class="avatar bot"><i class="fas fa-robot"></i></div>
+                <div class="bubble bot">
+                    👋 Hello! I'm your <strong>AI Restaurant Operations Assistant</strong>.<br><br>
+                    I can help you with:
+                    <ul style="margin:10px 0 0 16px;line-height:2;">
+                        <li>📦 <strong>Inventory predictions</strong> for any ingredient</li>
+                        <li>📋 <strong>Menu analysis</strong> & cost optimization</li>
+                        <li>🛒 <strong>Order recommendations</strong> based on data</li>
+                        <li>🔄 <strong>Ingredient substitutes</strong> & alternatives</li>
+                    </ul>
+                    <br>Try asking: <em>"Predict needs for Bread, Ice, and Tomato"</em>
+                    <span class="msg-time">Just now</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- INPUT BAR -->
+        <div class="input-bar">
+            <div class="input-row">
+                <div class="input-wrap">
+                    <input type="text" id="userInput" placeholder="Ask about inventory, menu analysis, predictions..." autocomplete="off">
+                </div>
+                <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+            <div class="input-hints">
+                <button class="hint-chip" onclick="useHint(this)">Bread & Ice stock?</button>
+                <button class="hint-chip" onclick="useHint(this)">Order plan for next week</button>
+                <button class="hint-chip" onclick="useHint(this)">Menu cost analysis</button>
+                <button class="hint-chip" onclick="useHint(this)">Top 5 ingredients</button>
+                <button class="hint-chip" onclick="useHint(this)">Low stock alerts</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    </div>
+
+    <script>
+    // Configure marked.js for safe rendering
+    marked.setOptions({ breaks: true, gfm: true });
+
+    const chatMessages = document.getElementById('chatMessages');
+
+    function getTime() {
+        return new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    }
+
+    function tagClass(c) {
+        const map = { PREDICTION:'tag-PREDICTION', INVENTORY:'tag-INVENTORY', MENU:'tag-MENU', ORDER:'tag-ORDER', GENERAL:'tag-GENERAL' };
+        return map[c] || 'tag-GENERAL';
+    }
+
+    function addUserMessage(text) {
+        const row = document.createElement('div');
+        row.className = 'message-row user';
+        row.innerHTML = `
+            <div class="avatar user"><i class="fas fa-user"></i></div>
+            <div class="bubble user">
+                ${escapeHtml(text)}
+                <span class="msg-time">${getTime()}</span>
+            </div>`;
+        chatMessages.appendChild(row);
+        scroll();
+    }
+
+    function addBotMessage(text, classification, data) {
+        // Remove welcome card on first real message
+        const wc = document.getElementById('welcomeCard');
+        if (wc) wc.style.display = 'none';
+
+        // Use marked.js to render markdown (tables, bold, lists, code blocks)
+        let rendered = marked.parse(text);
+
+        // Post-process: color-code status cells
+        rendered = rendered
+            .replace(/\[Order Needed\]/g, '<span style="color:#f87171;font-weight:700;font-size:0.78rem;padding:1px 6px;background:rgba(239,68,68,0.1);border-radius:4px;">[Order Needed]</span>')
+            .replace(/\[Sufficient\]/g,   '<span style="color:#34d399;font-weight:700;font-size:0.78rem;padding:1px 6px;background:rgba(16,185,129,0.1);border-radius:4px;">[Sufficient]</span>')
+            .replace(/\[Not in Inventory\]/g, '<span style="color:#f59e0b;font-weight:700;font-size:0.78rem;padding:1px 6px;background:rgba(245,158,11,0.1);border-radius:4px;">[Not in Inventory]</span>');
+
+        // Wrap table in a scrollable container for wide tables
+        rendered = rendered.replace(/<table>/g, '<div class="table-scroll-wrap"><table>').replace(/<\/table>/g, '</table></div>');
+
+        const colorized = rendered;
+
+        // Build follow-up suggestion pills based on classification
+        let pills = '';
+        if (classification === 'PREDICTION') {
+            pills = `
+                <div class="insight-pills">
+                    <span class="insight-pill" onclick="sendQuick('Generate order cart for these items')">Generate Order Cart</span>
+                    <span class="insight-pill" onclick="sendQuick('What are substitute options for these ingredients?')">Find Substitutes</span>
+                    <span class="insight-pill" onclick="sendQuick('Show me the cost breakdown for these ingredients')">Cost Breakdown</span>
+                </div>`;
+        } else if (classification === 'MENU') {
+            pills = `
+                <div class="insight-pills">
+                    <span class="insight-pill" onclick="sendQuick('Which ingredients from the menu are low in stock?')">Check Stock</span>
+                    <span class="insight-pill" onclick="sendQuick('What should I order to fulfill all menu items?')">Full Restock Plan</span>
+                </div>`;
+        } else if (classification === 'ORDER' || classification === 'INVENTORY') {
+            pills = `
+                <div class="insight-pills">
+                    <span class="insight-pill" onclick="sendQuick('Predict 7-day needs for all low stock items')">7-Day Plan</span>
+                    <span class="insight-pill" onclick="sendQuick('Give me a full weekly procurement schedule')">Procurement Schedule</span>
+                </div>`;
+        }
+
+        const row = document.createElement('div');
+        row.className = 'message-row';
+        row.innerHTML = `
+            <div class="avatar bot"><i class="fas fa-robot"></i></div>
+            <div class="bubble bot">
+                ${colorized}
+                ${pills}
+                <div style="margin-top:8px;display:flex;align-items:center;gap:8px;">
+                    <span class="class-tag ${tagClass(classification)}">${classification}</span>
+                    <span class="msg-time" style="margin-top:0;">${getTime()}</span>
+                </div>
+            </div>`;
+        chatMessages.appendChild(row);
+        scroll();
+
+        // If prediction data, refresh sidebar recommendations
+        if (data && data.length > 0) {
+            updateRecommendationsFromData(data);
+        }
+    }
+
+    function addErrorMessage(msg) {
+        const row = document.createElement('div');
+        row.className = 'message-row';
+        row.innerHTML = `
+            <div class="avatar bot"><i class="fas fa-robot"></i></div>
+            <div class="bubble bot" style="color:#f87171;">
+                <i class="fas fa-exclamation-circle"></i> ${msg}
+                <span class="msg-time">${getTime()}</span>
+            </div>`;
+        chatMessages.appendChild(row);
+        scroll();
+    }
+
+    function showTyping() {
+        const row = document.createElement('div');
+        row.className = 'message-row';
+        row.id = 'typingRow';
+        row.innerHTML = `
+            <div class="avatar bot"><i class="fas fa-robot"></i></div>
+            <div class="typing-bubble">
+                <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+            </div>`;
+        chatMessages.appendChild(row);
+        scroll();
+    }
+    function hideTyping() { const t = document.getElementById('typingRow'); if(t) t.remove(); }
+    function scroll() { chatMessages.scrollTop = chatMessages.scrollHeight; }
+
+    async function sendMessage() {
+        const input = document.getElementById('userInput');
+        const btn   = document.getElementById('sendBtn');
+        const msg   = input.value.trim();
+        if (!msg) return;
+
+        addUserMessage(msg);
+        input.value = '';
+        btn.disabled = true;
+        showTyping();
+
+        try {
+            const res = await fetch('/api/chat/query', {
+                method: 'POST',
+                headers: {'Content-Type':'application/json'},
+                body: JSON.stringify({query: msg, user_id: 1})
+            });
+            const data = await res.json();
+            hideTyping();
+            if (data.success) {
+                addBotMessage(data.response, data.classification, data.prediction_data || []);
+            } else {
+                addErrorMessage('Sorry, something went wrong. Please try again.');
+            }
+        } catch(e) {
+            hideTyping();
+            addErrorMessage('Could not connect to the AI server.');
+        } finally {
+            btn.disabled = false;
+            input.focus();
+        }
+    }
+
+    function sendQuick(text) {
+        document.getElementById('userInput').value = text;
+        sendMessage();
+    }
+
+    function useHint(el) {
+        document.getElementById('userInput').value = el.textContent.trim();
+        document.getElementById('userInput').focus();
+    }
+
+    document.getElementById('userInput').addEventListener('keydown', e => {
+        if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+    });
+
+    function escapeHtml(t) {
+        return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    // ---- RECOMMENDATIONS SYSTEM ----
+    async function loadRecommendations() {
+        const list = document.getElementById('recList');
+        list.innerHTML = '<div style="color:var(--text-muted);font-size:0.8rem;text-align:center;padding:20px;"><i class="fas fa-spinner fa-spin" style="display:block;font-size:18px;margin-bottom:8px;"></i>Analyzing inventory...</div>';
+
+        try {
+            // Call general inventory prediction for low stock items
+            const res = await fetch('/api/chat/query', {
+                method: 'POST',
+                headers: {'Content-Type':'application/json'},
+                body: JSON.stringify({query: 'What ingredients are low in stock? List them.', user_id: 1})
+            });
+            const data = await res.json();
+
+            // Also fetch low-stock products directly
+            const invRes = await fetch('/api/inventory/check', {
+                method: 'POST',
+                headers: {'Content-Type':'application/json'},
+                body: JSON.stringify({ingredients: ['Bread','Ice','Tomato','Chicken','Butter','Milk','Rice','Egg','Garlic','Onion']})
+            });
+
+            if (invRes.ok) {
+                const invData = await invRes.json();
+                renderRecommendations(invData.results || []);
+            } else {
+                renderDefaultRecommendations();
+            }
+        } catch(e) {
+            renderDefaultRecommendations();
+        }
+    }
+
+    function renderRecommendations(results) {
+        const list = document.getElementById('recList');
+        if (!results || results.length === 0) { renderDefaultRecommendations(); return; }
+
+        let html = '';
+        results.slice(0, 8).forEach(item => {
+            const pct = item.stock_percent !== undefined ? item.stock_percent : Math.floor(Math.random()*100);
+            const badge = pct < 30 ? 'badge-order' : pct < 60 ? 'badge-warn' : 'badge-ok';
+            const label = pct < 30 ? 'Order Now' : pct < 60 ? 'Low' : 'OK';
+            const barColor = pct < 30 ? '#ef4444' : pct < 60 ? '#f59e0b' : '#10b981';
+            html += `
+            <div class="rec-card" onclick="sendQuick('Predict the 7-day need for ${item.name}')">
+                <div class="rec-header">
+                    <span class="rec-name">${item.name}</span>
+                    <span class="rec-badge ${badge}">${label}</span>
+                </div>
+                <div class="rec-detail">${item.current_stock || '—'} ${item.unit || ''} in stock</div>
+                <div class="rec-bar-bg"><div class="rec-bar" style="width:${pct}%;background:${barColor};"></div></div>
+            </div>`;
+        });
+        list.innerHTML = html;
+    }
+
+    function updateRecommendationsFromData(predData) {
+        const list = document.getElementById('recList');
+        if (!predData || predData.length === 0) return;
+
+        let html = '<div class="sidebar-section" style="padding:8px 0;"><div class="sidebar-title" style="padding:0 16px;">From Last Query</div></div>';
+        predData.forEach(p => {
+            const isOrder = p.should_order;
+            const badge = isOrder ? 'badge-order' : 'badge-ok';
+            const label = isOrder ? 'Order' : 'OK';
+            const barColor = isOrder ? '#ef4444' : '#10b981';
+            const pct = Math.min(100, Math.round((p.current_stock / (p.current_stock + p.recommended_order + 1)) * 100));
+            html += `
+            <div class="rec-card" onclick="sendQuick('Tell me more about ${p.ingredient} stock and usage trends')">
+                <div class="rec-header">
+                    <span class="rec-name">${p.ingredient}</span>
+                    <span class="rec-badge ${badge}">${label}</span>
+                </div>
+                <div class="rec-detail">Stock: ${p.current_stock} ${p.unit} &bull; Need: ${p.predicted_need_7days} ${p.unit}</div>
+                <div class="rec-bar-bg"><div class="rec-bar" style="width:${pct}%;background:${barColor};"></div></div>
+            </div>`;
+        });
+        list.innerHTML = html;
+    }
+
+    function renderDefaultRecommendations() {
+        const items = [
+            {name:'Bread', stock:'48 boxes', pct:72},
+            {name:'Ice', stock:'57 liters', pct:65},
+            {name:'Tomato', stock:'12 kg', pct:28},
+            {name:'Chicken Breast', stock:'6 pieces', pct:15},
+            {name:'Butter', stock:'24 boxes', pct:55},
+        ];
+        const list = document.getElementById('recList');
+        list.innerHTML = items.map(i => {
+            const badge = i.pct < 30 ? 'badge-order' : i.pct < 60 ? 'badge-warn' : 'badge-ok';
+            const label = i.pct < 30 ? 'Order Now' : i.pct < 60 ? 'Low' : 'OK';
+            const barColor = i.pct < 30 ? '#ef4444' : i.pct < 60 ? '#f59e0b' : '#10b981';
+            return `
+            <div class="rec-card" onclick="sendQuick('Predict the 7-day need for ${i.name}')">
+                <div class="rec-header">
+                    <span class="rec-name">${i.name}</span>
+                    <span class="rec-badge ${badge}">${label}</span>
+                </div>
+                <div class="rec-detail">${i.stock} in stock</div>
+                <div class="rec-bar-bg"><div class="rec-bar" style="width:${i.pct}%;background:${barColor};"></div></div>
+            </div>`;
+        }).join('');
+    }
+
+    // Load recommendations on startup
+    loadRecommendations();
+</script>
+
+<!-- ── Nova Dine Unified Footer ── -->
+<footer class="nova-footer">
+    <div class="footer-grid">
+        <div class="footer-brand">
+            <div class="footer-brand-name">
+                <i class="fas fa-utensils"></i> Nova Dine
+            </div>
+            <p>AI-powered restaurant inventory management. Predict demand, reduce waste, and streamline operations with intelligent automation.</p>
+            <div class="footer-social">
+                <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#" title="GitHub"><i class="fab fa-github"></i></a>
+                <a href="#" title="Email"><i class="fas fa-envelope"></i></a>
+            </div>
+        </div>
+        <div class="footer-col">
+            <h4>Platform</h4>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/inventory">Inventory</a>
+            <a href="/menu-upload">Menu Upload</a>
+            <a href="/chat">AI Chat</a>
+            <a href="/analytics">Analytics</a>
+        </div>
+        <div class="footer-col">
+            <h4>Operations</h4>
+            <a href="/orders">Orders</a>
+            <a href="/suppliers">Suppliers</a>
+            <a href="/recipes">Recipes</a>
+            <a href="/waste-management">Waste Mgmt</a>
+            <a href="/staff">Staff</a>
+        </div>
+        <div class="footer-col">
+            <h4>Support</h4>
+            <a href="/help">Help Center</a>
+            <a href="/settings">Settings</a>
+            <a href="/reports">Reports</a>
+            <a href="#">Documentation</a>
+            <a href="#">API Reference</a>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <span>&copy; 2026 Nova Dine Systems &mdash; AI Backbone Layer. All rights reserved.</span>
+        <div class="footer-status">
+            <span class="status-dot"></span>
+            <span>All systems operational</span>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>

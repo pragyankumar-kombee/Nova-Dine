@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta name="description" content="Nova Dine - The ultimate operational Backbone Layer for restaurant management. Predict inventory, run analysis, and elevate dining experiences with intelligent AI.">
+    <meta name="keywords" content="Restaurant AI, Inventory Management, Menu Analysis, Food Cost Optimization, Culina, Culinary AI">
+    <!-- Static Assets -->
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="/static/js/main.js" defer></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Help — Nova Dine</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<style>
+        :root {
+            --pure-white: #ffffff;
+            --off-white: #f9fafb;
+            --gray-50: #f3f4f6;
+            --gray-100: #e5e7eb;
+            --gray-700: #374151;
+            --gray-900: #111827;
+            --accent: #6366f1;
+            --accent-soft: #e0e7ff;
+            
+            /* Old variables mapped to light theme for compatibility */
+            --bg: #ffffff;
+            --bg-primary: #f9fafb;
+            --bg2: #f3f4f6;
+            --bg-secondary: #ffffff;
+            --card: #ffffff;
+            --bg-card: #ffffff;
+            --bg-hover: #f3f4f6;
+            --border: #e5e7eb;
+            --green: #10b981;
+            --amber: #f59e0b;
+            --red: #ef4444;
+            --text: #111827;
+            --text-primary: #111827;
+            --text-secondary: #374151;
+            --muted: #6b7280;
+            --text-muted: #6b7280;
+            --user-bubble: #6366f1;
+            --bot-bubble: #f3f4f6;
+            --accent2: #10b981;
+            --accent3: #f59e0b;
+            --accent-red: #ef4444;
+            --accent-glow: rgba(99,102,241,0.1);
+        }
+*{box-sizing:border-box;margin:0;padding:0;}body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:56px;background:var(--bg2);border-bottom:1px solid var(--border);}
+.brand{font-weight:700;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:10px;}
+.brand-icon{width:32px;height:32px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border-radius:8px;display:flex;align-items:center;justify-content:center;}
+.nav-links a{padding:6px 12px;border-radius:6px;color:var(--muted);text-decoration:none;font-size:0.83rem;}
+.nav-links a:hover,.nav-links a.active{background:#21262d;color:var(--text);}
+.main{padding:24px;max-width:800px;margin:0 auto;}
+.page-title{font-size:1.3rem;font-weight:700;margin-bottom:4px;}.page-sub{color:var(--muted);font-size:0.85rem;margin-bottom:24px;}
+.faq-item{background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:8px;overflow:hidden;}
+.faq-q{padding:14px 18px;cursor:pointer;font-weight:500;display:flex;justify-content:space-between;align-items:center;font-size:0.88rem;}
+.faq-q:hover{background:var(--bg2);}
+.faq-a{padding:0 18px 14px;font-size:0.83rem;color:var(--muted);line-height:1.6;display:none;}
+.faq-a.open{display:block;}
+.section-title{font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;color:#484f58;font-weight:600;margin:20px 0 10px;}
+.quick-link{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px;display:flex;align-items:center;gap:12px;margin-bottom:8px;text-decoration:none;color:var(--text);font-size:0.85rem;transition:border-color 0.2s;}
+.quick-link:hover{border-color:var(--accent);}
+.quick-link i{color:var(--accent);width:16px;}
+</style></head>
+<body>
+
+<!-- UNIFIED HEADER -->
+<header class="main-header">
+    <div class="header-container">
+        <a href="/" class="brand-logo">
+            <i class="fas fa-utensils" style="color:#6366f1;"></i> Nova Dine
+        </a>
+        <nav class="main-nav">
+            <a href="/" class="nav-link">Home</a>
+            <a href="/dashboard" class="nav-link">Dashboard</a>
+            <a href="/menu-upload" class="nav-link">Menu Upload</a>
+            <a href="/inventory" class="nav-link">Inventory</a>
+            <a href="/chat" class="nav-link">AI Chat</a>
+            <div class="nav-dropdown">
+                <button class="nav-link dropdown-toggle">Operations <i class="fas fa-chevron-down" style="font-size:0.7rem;margin-left:4px;"></i></button>
+                <div class="dropdown-menu">
+                    <a href="/analytics">Analytics</a>
+                    <a href="/reports">Reports</a>
+                    <a href="/orders">Orders</a>
+                    <a href="/suppliers">Suppliers</a>
+                    <a href="/recipes">Recipes</a>
+                    <a href="/waste-management">Waste Mgmt</a>
+                    <a href="/staff">Staff</a>
+                </div>
+            </div>
+            <a href="/settings" class="nav-link">Settings</a>
+            <a href="/help" class="nav-link">Help</a>
+        </nav>
+        <button class="mobile-menu-btn"><i class="fas fa-bars"></i></button>
+    </div>
+</header>
+
+<div class="main">
+    <div class="page-title">Help & Documentation</div>
+    <div class="page-sub">Guides, FAQs, and quick links to get you started</div>
+    <div class="section-title">Quick Links</div>
+    <a class="quick-link" href="/chat"><i class="fas fa-robot"></i>Chat with AI Assistant</a>
+    <a class="quick-link" href="/menu-upload"><i class="fas fa-upload"></i>Upload Menu PDF</a>
+    <a class="quick-link" href="/inventory"><i class="fas fa-boxes"></i>Check Inventory</a>
+    <a class="quick-link" href="/analytics"><i class="fas fa-chart-line"></i>View Demand Forecast</a>
+    <div class="section-title">Frequently Asked Questions</div>
+    <div class="faq-item"><div class="faq-q" onclick="toggle(this)">How do I upload my menu? <i class="fas fa-chevron-down"></i></div><div class="faq-a">Go to <strong>Menu Upload</strong>, choose a PDF or text file, and click Upload. The AI will extract ingredients automatically using the RAG pipeline.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggle(this)">How does the prediction engine work? <i class="fas fa-chevron-down"></i></div><div class="faq-a">The AI analyzes your historical order data and applies seasonality factors to predict 7-day ingredient demand. It uses Groq's LLM for natural language queries and PostgreSQL for data retrieval.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggle(this)">What questions can I ask the chatbot? <i class="fas fa-chevron-down"></i></div><div class="faq-a">You can ask about stock levels, predictions, menu analysis, cost optimization, supplier recommendations, and ingredient substitutes. Examples:<br>• "What is the predicted need for Chicken and Rice?"<br>• "Which ingredients are low in stock?"<br>• "Suggest substitutes for Cream"</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggle(this)">How does ingredient matching work? <i class="fas fa-chevron-down"></i></div><div class="faq-a">The system uses PostgreSQL regex (word-boundary matching) to precisely match ingredients from your query to inventory items, preventing false matches like "Ice" matching "Basmati Rice".</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggle(this)">Where is my data stored? <i class="fas fa-chevron-down"></i></div><div class="faq-a">All data is stored in your local PostgreSQL database (accessible via pgAdmin). This includes menu documents, inventory, orders, and AI insights. Views like <code>v_chatbot_insights</code> are available for easy querying.</div></div>
+</div>
+
+    </div>
+
+    <script>function toggle(el){const a=el.nextElementSibling;a.classList.toggle('open');el.querySelector('i').style.transform=a.classList.contains('open')?'rotate(180deg)':'';}
+</script>
+<!-- ── Nova Dine Unified Footer ── -->
+<footer class="nova-footer">
+    <div class="footer-grid">
+        <div class="footer-brand">
+            <div class="footer-brand-name">
+                <i class="fas fa-utensils"></i> Nova Dine
+            </div>
+            <p>AI-powered restaurant inventory management. Predict demand, reduce waste, and streamline operations with intelligent automation.</p>
+            <div class="footer-social">
+                <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#" title="GitHub"><i class="fab fa-github"></i></a>
+                <a href="#" title="Email"><i class="fas fa-envelope"></i></a>
+            </div>
+        </div>
+        <div class="footer-col">
+            <h4>Platform</h4>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/inventory">Inventory</a>
+            <a href="/menu-upload">Menu Upload</a>
+            <a href="/chat">AI Chat</a>
+            <a href="/analytics">Analytics</a>
+        </div>
+        <div class="footer-col">
+            <h4>Operations</h4>
+            <a href="/orders">Orders</a>
+            <a href="/suppliers">Suppliers</a>
+            <a href="/recipes">Recipes</a>
+            <a href="/waste-management">Waste Mgmt</a>
+            <a href="/staff">Staff</a>
+        </div>
+        <div class="footer-col">
+            <h4>Support</h4>
+            <a href="/help">Help Center</a>
+            <a href="/settings">Settings</a>
+            <a href="/reports">Reports</a>
+            <a href="#">Documentation</a>
+            <a href="#">API Reference</a>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <span>&copy; 2026 Nova Dine Systems &mdash; AI Backbone Layer. All rights reserved.</span>
+        <div class="footer-status">
+            <span class="status-dot"></span>
+            <span>All systems operational</span>
+        </div>
+    </div>
+</footer>
+
+</body></html>

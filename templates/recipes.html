@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta name="description" content="Nova Dine - The ultimate operational Backbone Layer for restaurant management. Predict inventory, run analysis, and elevate dining experiences with intelligent AI.">
+    <meta name="keywords" content="Restaurant AI, Inventory Management, Menu Analysis, Food Cost Optimization, Culina, Culinary AI">
+    <!-- Static Assets -->
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="/static/js/main.js" defer></script>
+
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipes — Nova Dine Kitchen</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        
+        :root {
+            --pure-white: #ffffff;
+            --off-white: #f9fafb;
+            --gray-50: #f3f4f6;
+            --gray-100: #e5e7eb;
+            --gray-700: #374151;
+            --gray-900: #111827;
+            --accent: #6366f1;
+            --accent-soft: #e0e7ff;
+            
+            /* Old variables mapped to light theme for compatibility */
+            --bg: #ffffff;
+            --bg-primary: #f9fafb;
+            --bg2: #f3f4f6;
+            --bg-secondary: #ffffff;
+            --card: #ffffff;
+            --bg-card: #ffffff;
+            --bg-hover: #f3f4f6;
+            --border: #e5e7eb;
+            --green: #10b981;
+            --amber: #f59e0b;
+            --red: #ef4444;
+            --text: #111827;
+            --text-primary: #111827;
+            --text-secondary: #374151;
+            --muted: #6b7280;
+            --text-muted: #6b7280;
+            --user-bubble: #6366f1;
+            --bot-bubble: #f3f4f6;
+            --accent2: #10b981;
+            --accent3: #f59e0b;
+            --accent-red: #ef4444;
+            --accent-glow: rgba(99,102,241,0.1);
+        }
+
+        *{box-sizing:border-box;margin:0;padding:0;}body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);}
+        .topbar{display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:56px;background:var(--bg2);border-bottom:1px solid var(--border);}
+        .brand{font-weight:700;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:10px;}
+        .brand-icon{width:32px;height:32px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border-radius:8px;display:flex;align-items:center;justify-content:center;}
+        .nav-links a{padding:6px 12px;border-radius:6px;color:var(--muted);text-decoration:none;font-size:0.83rem;}
+        .nav-links a:hover,.nav-links a.active{background:#21262d;color:var(--text);}
+        .main{padding:24px;max-width:1200px;margin:0 auto;}
+        .page-title{font-size:1.3rem;font-weight:700;margin-bottom:4px;}
+        .page-sub{color:var(--muted);font-size:0.85rem;margin-bottom:24px;}
+        .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+        .panel{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px;}
+        .panel-title{font-weight:600;margin-bottom:14px;}
+        .recipe-list .recipe-item{padding:12px;border:1px solid var(--border);border-radius:10px;margin-bottom:8px;cursor:pointer;transition:all 0.2s;}
+        .recipe-item:hover{border-color:var(--accent);}
+        .recipe-name{font-weight:600;margin-bottom:4px;}
+        .recipe-tags{display:flex;gap:5px;flex-wrap:wrap;}
+        .tag{padding:2px 8px;border-radius:20px;font-size:0.7rem;background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.3);color:#a5b4fc;}
+        label{display:block;font-size:0.8rem;color:var(--muted);margin-bottom:4px;margin-top:12px;}
+        input,textarea{width:100%;background:var(--bg2);border:1px solid var(--border);color:var(--text);padding:9px 12px;border-radius:8px;font-size:0.83rem;font-family:'Inter',sans-serif;outline:none;}
+        input:focus,textarea:focus{border-color:var(--accent);}
+        .btn{padding:9px 18px;border-radius:8px;border:none;font-family:'Inter',sans-serif;font-weight:600;cursor:pointer;font-size:0.83rem;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:white;margin-top:12px;width:100%;}
+        .result-panel{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-top:12px;font-size:0.83rem;display:none;}
+        .ok{color:#34d399;}.warn{color:#fbbf24;}.sub{color:#818cf8;}
+    </style>
+</head>
+<body>
+
+<!-- UNIFIED HEADER -->
+<header class="main-header">
+    <div class="header-container">
+        <a href="/" class="brand-logo">
+            <i class="fas fa-utensils" style="color:#6366f1;"></i> Nova Dine
+        </a>
+        <nav class="main-nav">
+            <a href="/" class="nav-link">Home</a>
+            <a href="/dashboard" class="nav-link">Dashboard</a>
+            <a href="/menu-upload" class="nav-link">Menu Upload</a>
+            <a href="/inventory" class="nav-link">Inventory</a>
+            <a href="/chat" class="nav-link">AI Chat</a>
+            <div class="nav-dropdown">
+                <button class="nav-link dropdown-toggle">Operations <i class="fas fa-chevron-down" style="font-size:0.7rem;margin-left:4px;"></i></button>
+                <div class="dropdown-menu">
+                    <a href="/analytics">Analytics</a>
+                    <a href="/reports">Reports</a>
+                    <a href="/orders">Orders</a>
+                    <a href="/suppliers">Suppliers</a>
+                    <a href="/recipes">Recipes</a>
+                    <a href="/waste-management">Waste Mgmt</a>
+                    <a href="/staff">Staff</a>
+                </div>
+            </div>
+            <a href="/settings" class="nav-link">Settings</a>
+            <a href="/help" class="nav-link">Help</a>
+        </nav>
+        <button class="mobile-menu-btn"><i class="fas fa-bars"></i></button>
+    </div>
+</header>
+
+<div class="main">
+    <div class="page-title">Recipe Optimizer</div>
+    <div class="page-sub">Check if recipes can be made with current stock, and get AI substitutions</div>
+    <div class="grid2">
+        <div class="panel recipe-list">
+            <div class="panel-title">Available Recipes</div>
+            <div class="recipe-item" onclick="tryRecipe('Butter Chicken','Chicken,Butter,Cream,Tomato,Garlic')">
+                <div class="recipe-name">Butter Chicken</div>
+                <div class="recipe-tags"><span class="tag">Chicken</span><span class="tag">Butter</span><span class="tag">Cream</span><span class="tag">Tomato</span></div>
+            </div>
+            <div class="recipe-item" onclick="tryRecipe('Pasta Carbonara','Pasta,Egg,Cream,Cheese,Garlic')">
+                <div class="recipe-name">Pasta Carbonara</div>
+                <div class="recipe-tags"><span class="tag">Pasta</span><span class="tag">Egg</span><span class="tag">Cream</span><span class="tag">Cheese</span></div>
+            </div>
+            <div class="recipe-item" onclick="tryRecipe('Biryani','Rice,Chicken,Onion,Tomato,Saffron')">
+                <div class="recipe-name">Chicken Biryani</div>
+                <div class="recipe-tags"><span class="tag">Rice</span><span class="tag">Chicken</span><span class="tag">Onion</span><span class="tag">Tomato</span></div>
+            </div>
+            <div class="recipe-item" onclick="tryRecipe('Garden Salad','Lettuce,Tomato,Cucumber,Onion')">
+                <div class="recipe-name">Garden Salad</div>
+                <div class="recipe-tags"><span class="tag">Lettuce</span><span class="tag">Tomato</span><span class="tag">Cucumber</span></div>
+            </div>
+        </div>
+        <div class="panel">
+            <div class="panel-title">Optimize a Recipe</div>
+            <label>Recipe Name</label>
+            <input type="text" id="recipeName" placeholder="e.g. Butter Chicken">
+            <label>Ingredients (comma-separated)</label>
+            <textarea id="recipeIngredients" rows="3" placeholder="Chicken, Butter, Cream, Tomato, Garlic"></textarea>
+            <button class="btn" onclick="optimize()"><i class="fas fa-magic" style="margin-right:6px;"></i>Optimize with AI</button>
+            <div class="result-panel" id="resultPanel"></div>
+        </div>
+    </div>
+</div>
+
+    </div>
+
+    <script>
+function tryRecipe(name, ingStr) {
+    document.getElementById('recipeName').value = name;
+    document.getElementById('recipeIngredients').value = ingStr;
+}
+async function optimize() {
+    const name = document.getElementById('recipeName').value;
+    const ings = document.getElementById('recipeIngredients').value.split(',').map(s=>s.trim()).filter(Boolean);
+    if (!name || !ings.length) { alert('Fill in recipe name and ingredients.'); return; }
+    const panel = document.getElementById('resultPanel');
+    panel.style.display='block';
+    panel.innerHTML='<i class="fas fa-spinner" style="animation:spin 0.8s linear infinite;display:inline-block;"></i> Checking stock...';
+    const r = await fetch('/api/recipes/optimize',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({recipe_name:name,ingredients:ings})});
+    const d = await r.json();
+    if (d.success) {
+        if (d.can_make) {
+            panel.innerHTML=`<div class="ok"><i class="fas fa-check-circle"></i> <strong>${name}</strong> can be made with current stock!</div>`;
+        } else {
+            let html = `<div class="warn"><i class="fas fa-exclamation-triangle"></i> <strong>Low stock</strong> for: ${d.low_ingredients.join(', ')}</div>`;
+            if (d.substitutes.length) {
+                html += '<div style="margin-top:10px;font-weight:600;">AI Suggestions:</div>';
+                d.substitutes.forEach(s=>{ html+=`<div class="sub" style="margin-top:6px;"><i class="fas fa-exchange-alt"></i> Replace <strong>${s.original}</strong> with <strong>${s.substitute}</strong></div>`; });
+            }
+            panel.innerHTML = html;
+        }
+    }
+}
+</script>
+<style>@keyframes spin{to{transform:rotate(360deg);}}</style>
+
+<!-- ── Nova Dine Unified Footer ── -->
+<footer class="nova-footer">
+    <div class="footer-grid">
+        <div class="footer-brand">
+            <div class="footer-brand-name">
+                <i class="fas fa-utensils"></i> Nova Dine
+            </div>
+            <p>AI-powered restaurant inventory management. Predict demand, reduce waste, and streamline operations with intelligent automation.</p>
+            <div class="footer-social">
+                <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#" title="GitHub"><i class="fab fa-github"></i></a>
+                <a href="#" title="Email"><i class="fas fa-envelope"></i></a>
+            </div>
+        </div>
+        <div class="footer-col">
+            <h4>Platform</h4>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/inventory">Inventory</a>
+            <a href="/menu-upload">Menu Upload</a>
+            <a href="/chat">AI Chat</a>
+            <a href="/analytics">Analytics</a>
+        </div>
+        <div class="footer-col">
+            <h4>Operations</h4>
+            <a href="/orders">Orders</a>
+            <a href="/suppliers">Suppliers</a>
+            <a href="/recipes">Recipes</a>
+            <a href="/waste-management">Waste Mgmt</a>
+            <a href="/staff">Staff</a>
+        </div>
+        <div class="footer-col">
+            <h4>Support</h4>
+            <a href="/help">Help Center</a>
+            <a href="/settings">Settings</a>
+            <a href="/reports">Reports</a>
+            <a href="#">Documentation</a>
+            <a href="#">API Reference</a>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <span>&copy; 2026 Nova Dine Systems &mdash; AI Backbone Layer. All rights reserved.</span>
+        <div class="footer-status">
+            <span class="status-dot"></span>
+            <span>All systems operational</span>
+        </div>
+    </div>
+</footer>
+
+</body></html>

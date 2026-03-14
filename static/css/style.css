@@ -1,0 +1,300 @@
+:root {
+    --pure-white: #ffffff;
+    --off-white: #f9fafb;
+    --gray-50: #f3f4f6;
+    --gray-100: #e5e7eb;
+    --gray-200: #e5e7eb;
+    --gray-700: #374151;
+    --gray-800: #1f2937;
+    --gray-900: #111827;
+    --accent: #6366f1;
+    --accent-hover: #4f46e5;
+    --accent-soft: #e0e7ff;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --font-main: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+body {
+    font-family: var(--font-main);
+    background-color: var(--off-white);
+    color: var(--gray-900);
+    margin: 0;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Unified Navbar Styles */
+.main-header {
+    background-color: var(--pure-white);
+    border-bottom: 1px solid var(--gray-200);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: var(--shadow-sm);
+}
+
+.header-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 24px;
+    height: 64px;
+}
+
+.brand-logo {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--gray-900);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.brand-logo i {
+    color: var(--accent);
+}
+
+.main-nav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.main-nav .nav-link {
+    color: var(--gray-700);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.9rem;
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.main-nav .nav-link:hover, .main-nav .nav-link.active {
+    background-color: var(--gray-50);
+    color: var(--gray-900);
+}
+
+.nav-dropdown {
+    position: relative;
+}
+
+.nav-dropdown .dropdown-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: var(--pure-white);
+    border: 1px solid var(--gray-200);
+    border-radius: 8px;
+    box-shadow: var(--shadow-md);
+    min-width: 200px;
+    padding: 8px 0;
+    display: none;
+    flex-direction: column;
+    z-index: 1000;
+}
+
+.nav-dropdown:hover .dropdown-menu {
+    display: flex;
+}
+
+.dropdown-menu a {
+    padding: 8px 16px;
+    color: var(--gray-700);
+    text-decoration: none;
+    font-size: 0.875rem;
+    transition: background 0.2s;
+}
+
+.dropdown-menu a:hover {
+    background-color: var(--gray-50);
+    color: var(--accent);
+}
+
+.mobile-menu-btn {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.25rem;
+    color: var(--gray-700);
+    cursor: pointer;
+}
+
+@media (max-width: 1024px) {
+    .main-nav {
+        display: none;
+        position: absolute;
+        top: 64px;
+        left: 0;
+        right: 0;
+        background: var(--pure-white);
+        flex-direction: column;
+        padding: 16px;
+        border-bottom: 1px solid var(--gray-200);
+        box-shadow: var(--shadow-md);
+    }
+    
+    .main-nav.show {
+        display: flex;
+    }
+    
+    .mobile-menu-btn {
+        display: block;
+    }
+    
+    .nav-dropdown:hover .dropdown-menu {
+        display: none;
+    }
+    
+    .nav-dropdown.active .dropdown-menu {
+        display: flex;
+        position: static;
+        box-shadow: none;
+        border: none;
+        padding-left: 16px;
+    }
+}
+
+
+/* ── Nova Dine Unified Footer ─────────────────────────────── */
+.nova-footer {
+    background: var(--gray-900);
+    color: var(--pure-white);
+    margin-top: auto;
+    padding: 40px 0 0;
+    font-family: var(--font-main);
+}
+
+.nova-footer .footer-grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 40px;
+}
+
+.nova-footer .footer-brand p {
+    color: #9ca3af;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    margin: 10px 0 16px;
+}
+
+.nova-footer .footer-brand-name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.nova-footer .footer-brand-name i {
+    color: var(--accent);
+}
+
+.nova-footer .footer-social {
+    display: flex;
+    gap: 10px;
+}
+
+.nova-footer .footer-social a {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #9ca3af;
+    text-decoration: none;
+    font-size: 0.85rem;
+    transition: background 0.2s, color 0.2s;
+}
+
+.nova-footer .footer-social a:hover {
+    background: var(--accent);
+    color: #fff;
+}
+
+.nova-footer .footer-col h4 {
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #6b7280;
+    margin-bottom: 14px;
+}
+
+.nova-footer .footer-col a {
+    display: block;
+    color: #9ca3af;
+    text-decoration: none;
+    font-size: 0.85rem;
+    margin-bottom: 8px;
+    transition: color 0.2s;
+}
+
+.nova-footer .footer-col a:hover {
+    color: var(--pure-white);
+}
+
+.nova-footer .footer-bottom {
+    max-width: 1200px;
+    margin: 32px auto 0;
+    padding: 16px 24px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8rem;
+    color: #6b7280;
+}
+
+.nova-footer .footer-bottom .footer-status {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.nova-footer .footer-bottom .status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #10b981;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+}
+
+@media (max-width: 768px) {
+    .nova-footer .footer-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+    }
+    .nova-footer .footer-bottom {
+        flex-direction: column;
+        gap: 8px;
+        text-align: center;
+    }
+}

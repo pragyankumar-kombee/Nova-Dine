@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta name="description" content="Nova Dine - The ultimate operational Backbone Layer for restaurant management. Predict inventory, run analysis, and elevate dining experiences with intelligent AI.">
+    <meta name="keywords" content="Restaurant AI, Inventory Management, Menu Analysis, Food Cost Optimization, Culina, Culinary AI">
+    <!-- Static Assets -->
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="/static/js/main.js" defer></script>
+
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff — Nova Dine Kitchen</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        
+        :root {
+            --pure-white: #ffffff;
+            --off-white: #f9fafb;
+            --gray-50: #f3f4f6;
+            --gray-100: #e5e7eb;
+            --gray-700: #374151;
+            --gray-900: #111827;
+            --accent: #6366f1;
+            --accent-soft: #e0e7ff;
+            
+            /* Old variables mapped to light theme for compatibility */
+            --bg: #ffffff;
+            --bg-primary: #f9fafb;
+            --bg2: #f3f4f6;
+            --bg-secondary: #ffffff;
+            --card: #ffffff;
+            --bg-card: #ffffff;
+            --bg-hover: #f3f4f6;
+            --border: #e5e7eb;
+            --green: #10b981;
+            --amber: #f59e0b;
+            --red: #ef4444;
+            --text: #111827;
+            --text-primary: #111827;
+            --text-secondary: #374151;
+            --muted: #6b7280;
+            --text-muted: #6b7280;
+            --user-bubble: #6366f1;
+            --bot-bubble: #f3f4f6;
+            --accent2: #10b981;
+            --accent3: #f59e0b;
+            --accent-red: #ef4444;
+            --accent-glow: rgba(99,102,241,0.1);
+        }
+
+        *{box-sizing:border-box;margin:0;padding:0;}body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);}
+        .topbar{display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:56px;background:var(--bg2);border-bottom:1px solid var(--border);}
+        .brand{font-weight:700;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:10px;}
+        .brand-icon{width:32px;height:32px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border-radius:8px;display:flex;align-items:center;justify-content:center;}
+        .nav-links a{padding:6px 12px;border-radius:6px;color:var(--muted);text-decoration:none;font-size:0.83rem;}
+        .nav-links a:hover,.nav-links a.active{background:#21262d;color:var(--text);}
+        .main{padding:24px;max-width:1100px;margin:0 auto;}
+        .page-title{font-size:1.3rem;font-weight:700;margin-bottom:4px;}
+        .page-sub{color:var(--muted);font-size:0.85rem;margin-bottom:24px;}
+        .staff-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+        .staff-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px;text-align:center;transition:all 0.2s;}
+        .staff-card:hover{border-color:var(--accent);}
+        .avatar{width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:22px;margin:0 auto 12px;}
+        .staff-name{font-weight:700;margin-bottom:2px;}
+        .staff-role{color:var(--muted);font-size:0.82rem;margin-bottom:14px;}
+        .status-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:5px;}
+        .status-active{background:var(--green);}
+        .status-break{background:#f59e0b;}
+        .metric-row{display:flex;justify-content:space-around;margin-top:14px;padding-top:14px;border-top:1px solid var(--border);}
+        .metric{text-align:center;}
+        .metric-n{font-size:1rem;font-weight:700;color:var(--accent);}
+        .metric-l{font-size:0.7rem;color:var(--muted);}
+        .bar-bg{background:var(--bg2);border-radius:4px;height:6px;margin-top:6px;overflow:hidden;}
+        .bar{height:6px;border-radius:4px;background:linear-gradient(90deg,#6366f1,#8b5cf6);}
+    </style>
+</head>
+<body>
+
+<!-- UNIFIED HEADER -->
+<header class="main-header">
+    <div class="header-container">
+        <a href="/" class="brand-logo">
+            <i class="fas fa-utensils" style="color:#6366f1;"></i> Nova Dine
+        </a>
+        <nav class="main-nav">
+            <a href="/" class="nav-link">Home</a>
+            <a href="/dashboard" class="nav-link">Dashboard</a>
+            <a href="/menu-upload" class="nav-link">Menu Upload</a>
+            <a href="/inventory" class="nav-link">Inventory</a>
+            <a href="/chat" class="nav-link">AI Chat</a>
+            <div class="nav-dropdown">
+                <button class="nav-link dropdown-toggle">Operations <i class="fas fa-chevron-down" style="font-size:0.7rem;margin-left:4px;"></i></button>
+                <div class="dropdown-menu">
+                    <a href="/analytics">Analytics</a>
+                    <a href="/reports">Reports</a>
+                    <a href="/orders">Orders</a>
+                    <a href="/suppliers">Suppliers</a>
+                    <a href="/recipes">Recipes</a>
+                    <a href="/waste-management">Waste Mgmt</a>
+                    <a href="/staff">Staff</a>
+                </div>
+            </div>
+            <a href="/settings" class="nav-link">Settings</a>
+            <a href="/help" class="nav-link">Help</a>
+        </nav>
+        <button class="mobile-menu-btn"><i class="fas fa-bars"></i></button>
+    </div>
+</header>
+
+<div class="main">
+    <div class="page-title">Staff Performance</div>
+    <div class="page-sub">Real-time kitchen staff metrics and efficiency tracking</div>
+    <div class="staff-grid" id="staffGrid"></div>
+</div>
+
+    </div>
+
+    <script>
+async function load() {
+    const r = await fetch('/api/staff/performance'); const d = await r.json();
+    const grid = document.getElementById('staffGrid');
+    if (!d.success) return;
+    d.staff.forEach(s=>{
+        const initials = s.name.split(' ').map(n=>n[0]).join('');
+        const card = document.createElement('div');
+        card.className='staff-card';
+        card.innerHTML=`
+            <div class="avatar">${initials}</div>
+            <div class="staff-name">${s.name}</div>
+            <div class="staff-role">${s.role}</div>
+            <div style="font-size:0.78rem;"><span class="status-dot status-${s.status}"></span>${s.status.charAt(0).toUpperCase()+s.status.slice(1)}</div>
+            <div style="margin-top:12px;">
+                <div style="display:flex;justify-content:space-between;font-size:0.75rem;margin-bottom:4px;"><span style="color:var(--muted);">Accuracy</span><span style="color:var(--green);">${s.accuracy}%</span></div>
+                <div class="bar-bg"><div class="bar" style="width:${s.accuracy}%;"></div></div>
+                <div style="display:flex;justify-content:space-between;font-size:0.75rem;margin-bottom:4px;margin-top:8px;"><span style="color:var(--muted);">Efficiency</span><span style="color:#818cf8;">${s.efficiency}%</span></div>
+                <div class="bar-bg"><div class="bar" style="width:${s.efficiency}%;background:linear-gradient(90deg,#8b5cf6,#a78bfa);"></div></div>
+            </div>
+            <div class="metric-row">
+                <div class="metric"><div class="metric-n">${s.orders_handled}</div><div class="metric-l">Orders</div></div>
+                <div class="metric"><div class="metric-n">${s.accuracy}%</div><div class="metric-l">Accuracy</div></div>
+                <div class="metric"><div class="metric-n">${s.efficiency}%</div><div class="metric-l">Efficiency</div></div>
+            </div>`;
+        grid.appendChild(card);
+    });
+}
+load();
+</script>
+
+<!-- ── Nova Dine Unified Footer ── -->
+<footer class="nova-footer">
+    <div class="footer-grid">
+        <div class="footer-brand">
+            <div class="footer-brand-name">
+                <i class="fas fa-utensils"></i> Nova Dine
+            </div>
+            <p>AI-powered restaurant inventory management. Predict demand, reduce waste, and streamline operations with intelligent automation.</p>
+            <div class="footer-social">
+                <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#" title="GitHub"><i class="fab fa-github"></i></a>
+                <a href="#" title="Email"><i class="fas fa-envelope"></i></a>
+            </div>
+        </div>
+        <div class="footer-col">
+            <h4>Platform</h4>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/inventory">Inventory</a>
+            <a href="/menu-upload">Menu Upload</a>
+            <a href="/chat">AI Chat</a>
+            <a href="/analytics">Analytics</a>
+        </div>
+        <div class="footer-col">
+            <h4>Operations</h4>
+            <a href="/orders">Orders</a>
+            <a href="/suppliers">Suppliers</a>
+            <a href="/recipes">Recipes</a>
+            <a href="/waste-management">Waste Mgmt</a>
+            <a href="/staff">Staff</a>
+        </div>
+        <div class="footer-col">
+            <h4>Support</h4>
+            <a href="/help">Help Center</a>
+            <a href="/settings">Settings</a>
+            <a href="/reports">Reports</a>
+            <a href="#">Documentation</a>
+            <a href="#">API Reference</a>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <span>&copy; 2026 Nova Dine Systems &mdash; AI Backbone Layer. All rights reserved.</span>
+        <div class="footer-status">
+            <span class="status-dot"></span>
+            <span>All systems operational</span>
+        </div>
+    </div>
+</footer>
+
+</body></html>

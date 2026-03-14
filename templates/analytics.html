@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta name="description" content="Nova Dine - The ultimate operational Backbone Layer for restaurant management. Predict inventory, run analysis, and elevate dining experiences with intelligent AI.">
+    <meta name="keywords" content="Restaurant AI, Inventory Management, Menu Analysis, Food Cost Optimization, Culina, Culinary AI">
+    <!-- Static Assets -->
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="/static/js/main.js" defer></script>
+
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics — Nova Dine Kitchen</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        
+        :root {
+            --pure-white: #ffffff;
+            --off-white: #f9fafb;
+            --gray-50: #f3f4f6;
+            --gray-100: #e5e7eb;
+            --gray-700: #374151;
+            --gray-900: #111827;
+            --accent: #6366f1;
+            --accent-soft: #e0e7ff;
+            
+            /* Old variables mapped to light theme for compatibility */
+            --bg: #ffffff;
+            --bg-primary: #f9fafb;
+            --bg2: #f3f4f6;
+            --bg-secondary: #ffffff;
+            --card: #ffffff;
+            --bg-card: #ffffff;
+            --bg-hover: #f3f4f6;
+            --border: #e5e7eb;
+            --green: #10b981;
+            --amber: #f59e0b;
+            --red: #ef4444;
+            --text: #111827;
+            --text-primary: #111827;
+            --text-secondary: #374151;
+            --muted: #6b7280;
+            --text-muted: #6b7280;
+            --user-bubble: #6366f1;
+            --bot-bubble: #f3f4f6;
+            --accent2: #10b981;
+            --accent3: #f59e0b;
+            --accent-red: #ef4444;
+            --accent-glow: rgba(99,102,241,0.1);
+        }
+
+        *{box-sizing:border-box;margin:0;padding:0;}body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);}
+        .topbar{display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:56px;background:var(--bg2);border-bottom:1px solid var(--border);}
+        .brand{font-weight:700;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:10px;}
+        .brand-icon{width:32px;height:32px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;}
+        .nav-links a{padding:6px 12px;border-radius:6px;color:var(--muted);text-decoration:none;font-size:0.83rem;font-weight:500;}
+        .nav-links a:hover,.nav-links a.active{background:#21262d;color:var(--text);}
+        .main{padding:24px;max-width:1400px;margin:0 auto;}
+        .page-title{font-size:1.3rem;font-weight:700;margin-bottom:4px;}
+        .page-sub{color:var(--muted);font-size:0.85rem;margin-bottom:24px;}
+        .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px;}
+        .metric{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;text-align:center;}
+        .metric-val{font-size:1.8rem;font-weight:700;color:var(--accent);margin:10px 0;}
+        .metric-lbl{font-size:0.78rem;color:var(--muted);}
+        .metric-trend{font-size:0.72rem;color:var(--green);margin-top:4px;}
+        .panel{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:16px;}
+        .panel-title{font-size:0.9rem;font-weight:600;margin-bottom:4px;}
+        .panel-sub{font-size:0.78rem;color:var(--muted);margin-bottom:16px;}
+        .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+        table{width:100%;border-collapse:collapse;font-size:0.82rem;}
+        th{background:rgba(99,102,241,0.1);color:#a5b4fc;padding:9px 12px;text-align:left;font-weight:600;}
+        td{padding:8px 12px;border-bottom:1px solid var(--border);}
+        tr:last-child td{border-bottom:none;}
+        .badge{padding:2px 8px;border-radius:20px;font-size:0.7rem;font-weight:600;}
+        .badge-up{background:rgba(16,185,129,0.15);color:#34d399;}
+        .badge-dn{background:rgba(239,68,68,0.15);color:#f87171;}
+        .season-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px;}
+        .ai-alert{padding:10px 14px;border-radius:8px;font-size:0.82rem;margin-bottom:8px;display:flex;gap:10px;}
+        .ai-info{background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.25);color:#a5b4fc;}
+        .ai-warn{background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.25);color:#fbbf24;}
+        .ai-ok{background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.25);color:#34d399;}
+    </style>
+</head>
+<body>
+
+<!-- UNIFIED HEADER -->
+<header class="main-header">
+    <div class="header-container">
+        <a href="/" class="brand-logo">
+            <i class="fas fa-utensils" style="color:#6366f1;"></i> Nova Dine
+        </a>
+        <nav class="main-nav">
+            <a href="/" class="nav-link">Home</a>
+            <a href="/dashboard" class="nav-link">Dashboard</a>
+            <a href="/menu-upload" class="nav-link">Menu Upload</a>
+            <a href="/inventory" class="nav-link">Inventory</a>
+            <a href="/chat" class="nav-link">AI Chat</a>
+            <div class="nav-dropdown">
+                <button class="nav-link dropdown-toggle">Operations <i class="fas fa-chevron-down" style="font-size:0.7rem;margin-left:4px;"></i></button>
+                <div class="dropdown-menu">
+                    <a href="/analytics">Analytics</a>
+                    <a href="/reports">Reports</a>
+                    <a href="/orders">Orders</a>
+                    <a href="/suppliers">Suppliers</a>
+                    <a href="/recipes">Recipes</a>
+                    <a href="/waste-management">Waste Mgmt</a>
+                    <a href="/staff">Staff</a>
+                </div>
+            </div>
+            <a href="/settings" class="nav-link">Settings</a>
+            <a href="/help" class="nav-link">Help</a>
+        </nav>
+        <button class="mobile-menu-btn"><i class="fas fa-bars"></i></button>
+    </div>
+</header>
+
+<div class="main">
+    <div class="page-title">Analytics & Insights</div>
+    <div class="page-sub">AI-powered demand forecasting and performance analytics</div>
+    <div class="metrics">
+        <div class="metric"><i class="fas fa-chart-line" style="font-size:20px;color:var(--accent);"></i><div class="metric-val" id="m-demand">—</div><div class="metric-lbl">Avg Daily Demand</div><div class="metric-trend">+5.2% this week</div></div>
+        <div class="metric"><i class="fas fa-sync-alt" style="font-size:20px;color:var(--green);"></i><div class="metric-val" id="m-turn">8.4x</div><div class="metric-lbl">Inventory Turnover</div><div class="metric-trend">+2.1%</div></div>
+        <div class="metric"><i class="fas fa-exclamation-circle" style="font-size:20px;color:var(--amber);"></i><div class="metric-val" id="m-stock">2.3%</div><div class="metric-lbl">Stock-out Rate</div><div class="metric-trend" style="color:var(--red);">-1.3% improvement</div></div>
+        <div class="metric"><i class="fas fa-dollar-sign" style="font-size:20px;color:#38bdf8;"></i><div class="metric-val" id="m-order">—</div><div class="metric-lbl">Avg Order Value</div><div class="metric-trend">+8.7%</div></div>
+    </div>
+    <div class="panel">
+        <div class="panel-title">30-Day Demand Forecast</div>
+        <div class="panel-sub">AI predictions based on historical patterns and seasonality</div>
+        <canvas id="forecastChart" style="max-height:280px;"></canvas>
+    </div>
+    <div class="grid2">
+        <div class="panel">
+            <div class="panel-title">Top Selling Ingredients</div>
+            <table>
+                <thead><tr><th>Product</th><th>Forecast</th><th>Trend</th></tr></thead>
+                <tbody id="topTable"></tbody>
+            </table>
+        </div>
+        <div class="panel">
+            <div class="panel-title">AI Recommendations</div>
+            <div class="ai-alert ai-warn"><i class="fas fa-exclamation-triangle"></i><span>Tomatoes: +25% demand expected next week</span></div>
+            <div class="ai-alert ai-info"><i class="fas fa-robot"></i><span>Chicken breast running low — order within 3 days</span></div>
+            <div class="ai-alert ai-ok"><i class="fas fa-tag"></i><span>Dairy supplier discount available this week</span></div>
+            <div class="ai-alert ai-info"><i class="fas fa-calendar"></i><span>Weekend demand peaks — stock extra Bread & Ice</span></div>
+        </div>
+    </div>
+    <div class="panel">
+        <div class="panel-title">Seasonal Patterns</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px;">
+            <div class="season-card"><div style="font-weight:600;margin-bottom:8px;color:var(--amber);"><i class="fas fa-sun"></i> Summer</div><div style="font-size:0.8rem;color:var(--muted);line-height:1.8;">+45% Ice cream demand<br>+30% Salad ingredients<br>+20% Beverages</div></div>
+            <div class="season-card"><div style="font-weight:600;margin-bottom:8px;color:var(--green);"><i class="fas fa-leaf"></i> Spring</div><div style="font-size:0.8rem;color:var(--muted);line-height:1.8;">+35% Fresh vegetables<br>+25% Seafood<br>+15% Light dishes</div></div>
+            <div class="season-card"><div style="font-weight:600;margin-bottom:8px;color:#60a5fa;"><i class="fas fa-snowman"></i> Winter</div><div style="font-size:0.8rem;color:var(--muted);line-height:1.8;">+50% Hot soups<br>+40% Comfort food<br>+30% Hot beverages</div></div>
+        </div>
+    </div>
+</div>
+
+    </div>
+
+    <script>
+async function load() {
+    const r = await fetch('/api/analytics/demand-forecast?days=30');
+    const d = await r.json();
+    if (!d.success) return;
+    const fd = d.forecast_data;
+    const colors = ['#6366f1','#10b981','#f59e0b','#ef4444','#38bdf8'];
+    new Chart(document.getElementById('forecastChart'),{
+        type:'line',
+        data:{labels:fd[0]?.forecast_dates||[],datasets:fd.slice(0,5).map((p,i)=>({label:p.product_name,data:p.forecast_values,borderColor:colors[i],backgroundColor:colors[i]+'20',tension:0.4,fill:false,pointRadius:0}))},
+        options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#8b949e',font:{size:11}}}},scales:{x:{ticks:{color:'#8b949e',maxTicksLimit:8},grid:{color:'#21262d'}},y:{ticks:{color:'#8b949e'},grid:{color:'#21262d'}}}}
+    });
+    const tb = document.getElementById('topTable');
+    fd.slice(0,8).forEach(p=>{
+        const tr = document.createElement('tr');
+        const up = Math.random()>0.3;
+        tr.innerHTML=`<td>${p.product_name}</td><td>${p.total_forecast} ${p.unit}</td><td><span class="badge ${up?'badge-up':'badge-dn'}">${up?'▲':'▼'} ${(Math.random()*20+2).toFixed(1)}%</span></td>`;
+        tb.appendChild(tr);
+    });
+    const avg = fd.reduce((s,p)=>s+p.total_forecast/30,0)/fd.length;
+    document.getElementById('m-demand').textContent = Math.round(avg);
+    document.getElementById('m-order').textContent = \'₹\'+(Math.random()*200+150).toFixed(0);
+}
+load();
+</script>
+
+<!-- ── Nova Dine Unified Footer ── -->
+<footer class="nova-footer">
+    <div class="footer-grid">
+        <div class="footer-brand">
+            <div class="footer-brand-name">
+                <i class="fas fa-utensils"></i> Nova Dine
+            </div>
+            <p>AI-powered restaurant inventory management. Predict demand, reduce waste, and streamline operations with intelligent automation.</p>
+            <div class="footer-social">
+                <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#" title="GitHub"><i class="fab fa-github"></i></a>
+                <a href="#" title="Email"><i class="fas fa-envelope"></i></a>
+            </div>
+        </div>
+        <div class="footer-col">
+            <h4>Platform</h4>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/inventory">Inventory</a>
+            <a href="/menu-upload">Menu Upload</a>
+            <a href="/chat">AI Chat</a>
+            <a href="/analytics">Analytics</a>
+        </div>
+        <div class="footer-col">
+            <h4>Operations</h4>
+            <a href="/orders">Orders</a>
+            <a href="/suppliers">Suppliers</a>
+            <a href="/recipes">Recipes</a>
+            <a href="/waste-management">Waste Mgmt</a>
+            <a href="/staff">Staff</a>
+        </div>
+        <div class="footer-col">
+            <h4>Support</h4>
+            <a href="/help">Help Center</a>
+            <a href="/settings">Settings</a>
+            <a href="/reports">Reports</a>
+            <a href="#">Documentation</a>
+            <a href="#">API Reference</a>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <span>&copy; 2026 Nova Dine Systems &mdash; AI Backbone Layer. All rights reserved.</span>
+        <div class="footer-status">
+            <span class="status-dot"></span>
+            <span>All systems operational</span>
+        </div>
+    </div>
+</footer>
+
+</body></html>

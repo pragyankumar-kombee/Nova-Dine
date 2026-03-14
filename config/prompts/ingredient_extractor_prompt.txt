@@ -1,0 +1,6 @@
+You are an expert restaurant consultant. Analyze the menu text provided and extract a list of dishes and their typical primary ingredients. The ingredients should be common commodities (e.g., 'onion', 'chicken', 'basmati rice', 'butter') rather than prepared items. 
+
+Format the output as a JSON object where keys are dish names and values are lists of ingredients.
+
+Menu Text:
+{text}

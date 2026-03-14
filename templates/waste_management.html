@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta name="description" content="Nova Dine - The ultimate operational Backbone Layer for restaurant management. Predict inventory, run analysis, and elevate dining experiences with intelligent AI.">
+    <meta name="keywords" content="Restaurant AI, Inventory Management, Menu Analysis, Food Cost Optimization, Culina, Culinary AI">
+    <!-- Static Assets -->
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="/static/js/main.js" defer></script>
+
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Waste Management — Nova Dine Kitchen</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        
+        :root {
+            --pure-white: #ffffff;
+            --off-white: #f9fafb;
+            --gray-50: #f3f4f6;
+            --gray-100: #e5e7eb;
+            --gray-700: #374151;
+            --gray-900: #111827;
+            --accent: #6366f1;
+            --accent-soft: #e0e7ff;
+            
+            /* Old variables mapped to light theme for compatibility */
+            --bg: #ffffff;
+            --bg-primary: #f9fafb;
+            --bg2: #f3f4f6;
+            --bg-secondary: #ffffff;
+            --card: #ffffff;
+            --bg-card: #ffffff;
+            --bg-hover: #f3f4f6;
+            --border: #e5e7eb;
+            --green: #10b981;
+            --amber: #f59e0b;
+            --red: #ef4444;
+            --text: #111827;
+            --text-primary: #111827;
+            --text-secondary: #374151;
+            --muted: #6b7280;
+            --text-muted: #6b7280;
+            --user-bubble: #6366f1;
+            --bot-bubble: #f3f4f6;
+            --accent2: #10b981;
+            --accent3: #f59e0b;
+            --accent-red: #ef4444;
+            --accent-glow: rgba(99,102,241,0.1);
+        }
+
+        *{box-sizing:border-box;margin:0;padding:0;}body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);}
+        .topbar{display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:56px;background:var(--bg2);border-bottom:1px solid var(--border);}
+        .brand{font-weight:700;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:10px;}
+        .brand-icon{width:32px;height:32px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border-radius:8px;display:flex;align-items:center;justify-content:center;}
+        .nav-links a{padding:6px 12px;border-radius:6px;color:var(--muted);text-decoration:none;font-size:0.83rem;}
+        .nav-links a:hover,.nav-links a.active{background:#21262d;color:var(--text);}
+        .main{padding:24px;max-width:1200px;margin:0 auto;}
+        .page-title{font-size:1.3rem;font-weight:700;margin-bottom:4px;}
+        .page-sub{color:var(--muted);font-size:0.85rem;margin-bottom:24px;}
+        .grid2{display:grid;grid-template-columns:1fr 2fr;gap:16px;margin-bottom:16px;}
+        .panel{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px;}
+        .panel-title{font-weight:600;margin-bottom:16px;}
+        .impact-panel{background:linear-gradient(135deg,rgba(16,185,129,0.15),rgba(16,185,129,0.05));border:1px solid rgba(16,185,129,0.3);border-radius:14px;padding:24px;text-align:center;}
+        .impact-icon{font-size:36px;color:var(--green);margin-bottom:12px;}
+        .impact-val{font-size:2rem;font-weight:800;color:var(--green);}
+        .impact-label{font-size:0.85rem;color:var(--muted);margin-bottom:4px;}
+        .impact-sub{font-size:0.75rem;color:var(--green);opacity:0.7;}
+        label{display:block;font-size:0.8rem;color:var(--muted);margin-bottom:4px;margin-top:12px;}
+        select,input{width:100%;background:var(--bg2);border:1px solid var(--border);color:var(--text);padding:9px 12px;border-radius:8px;font-size:0.83rem;font-family:'Inter',sans-serif;outline:none;}
+        select:focus,input:focus{border-color:var(--accent);}
+        .btn{width:100%;padding:10px;border-radius:8px;border:none;font-family:'Inter',sans-serif;font-weight:600;cursor:pointer;font-size:0.85rem;background:linear-gradient(135deg,#10b981,#059669);color:white;margin-top:16px;}
+        .log-item{padding:10px;border:1px solid var(--border);border-radius:8px;margin-bottom:8px;font-size:0.82rem;}
+        .log-header{display:flex;justify-content:space-between;margin-bottom:4px;}
+        .log-product{font-weight:600;}
+        .log-time{color:var(--muted);font-size:0.75rem;}
+        .co2-badge{background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);color:#34d399;padding:2px 8px;border-radius:20px;font-size:0.7rem;}
+    </style>
+</head>
+<body>
+
+<!-- UNIFIED HEADER -->
+<header class="main-header">
+    <div class="header-container">
+        <a href="/" class="brand-logo">
+            <i class="fas fa-utensils" style="color:#6366f1;"></i> Nova Dine
+        </a>
+        <nav class="main-nav">
+            <a href="/" class="nav-link">Home</a>
+            <a href="/dashboard" class="nav-link">Dashboard</a>
+            <a href="/menu-upload" class="nav-link">Menu Upload</a>
+            <a href="/inventory" class="nav-link">Inventory</a>
+            <a href="/chat" class="nav-link">AI Chat</a>
+            <div class="nav-dropdown">
+                <button class="nav-link dropdown-toggle">Operations <i class="fas fa-chevron-down" style="font-size:0.7rem;margin-left:4px;"></i></button>
+                <div class="dropdown-menu">
+                    <a href="/analytics">Analytics</a>
+                    <a href="/reports">Reports</a>
+                    <a href="/orders">Orders</a>
+                    <a href="/suppliers">Suppliers</a>
+                    <a href="/recipes">Recipes</a>
+                    <a href="/waste-management">Waste Mgmt</a>
+                    <a href="/staff">Staff</a>
+                </div>
+            </div>
+            <a href="/settings" class="nav-link">Settings</a>
+            <a href="/help" class="nav-link">Help</a>
+        </nav>
+        <button class="mobile-menu-btn"><i class="fas fa-bars"></i></button>
+    </div>
+</header>
+
+<div class="main">
+    <div class="page-title">Waste Management</div>
+    <div class="page-sub">Track food waste and measure your environmental impact</div>
+    <div class="grid2">
+        <div>
+            <div class="impact-panel" style="margin-bottom:16px;">
+                <div class="impact-icon"><i class="fas fa-leaf"></i></div>
+                <div class="impact-val">245 kg</div>
+                <div class="impact-label">Waste Reduced This Month</div>
+                <div class="impact-sub">Equivalent to 612 kg CO₂ saved</div>
+            </div>
+            <div class="panel">
+                <div class="panel-title">Log Waste Entry</div>
+                <label>Product</label>
+                <select id="wProduct"><option>Tomatoes</option><option>Onions</option><option>Chicken</option><option>Lettuce</option><option>Bread</option><option>Milk</option></select>
+                <label>Quantity (kg/units)</label>
+                <input type="number" id="wQty" placeholder="e.g. 5" min="0">
+                <label>Reason</label>
+                <select id="wReason"><option>Spoilage</option><option>Overproduction</option><option>Quality Issues</option><option>Expiry</option><option>Other</option></select>
+                <button class="btn" onclick="logWaste()"><i class="fas fa-plus" style="margin-right:6px;"></i>Log Waste</button>
+            </div>
+        </div>
+        <div>
+            <div class="panel" style="margin-bottom:16px;">
+                <div class="panel-title">Weekly Waste Trend</div>
+                <canvas id="wasteChart" style="max-height:200px;"></canvas>
+            </div>
+            <div class="panel">
+                <div class="panel-title">Recent Waste Logs</div>
+                <div id="logList"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    </div>
+
+    <script>
+const logs = [
+    {product:'Tomatoes',qty:4.5,unit:'kg',reason:'Spoilage',time:'10:23 AM',co2:11.25},
+    {product:'Bread',qty:2,unit:'loaves',reason:'Overproduction',time:'08:45 AM',co2:5.0},
+    {product:'Chicken',qty:1.2,unit:'kg',reason:'Quality Issues',time:'Yesterday',co2:3.0},
+];
+function renderLogs() {
+    document.getElementById('logList').innerHTML = logs.slice(0,5).map(l=>`
+    <div class="log-item">
+        <div class="log-header"><span class="log-product">${l.product}</span><span class="log-time">${l.time}</span></div>
+        <span>${l.qty} ${l.unit} — ${l.reason}</span>
+        <span class="co2-badge" style="margin-left:8px;"><i class="fas fa-leaf"></i> ${l.co2} kg CO₂ tracked</span>
+    </div>`).join('');
+}
+async function logWaste() {
+    const qty = parseFloat(document.getElementById('wQty').value)||0;
+    const product = document.getElementById('wProduct').value;
+    const reason = document.getElementById('wReason').value;
+    if (!qty) { alert('Please enter a quantity.'); return; }
+    const r = await fetch('/api/waste/track',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({product_id:1,quantity:qty,reason})});
+    const d = await r.json();
+    if (d.success) {
+        logs.unshift({product,qty,unit:'units',reason,time:'Just now',co2:d.environmental_impact.co2_saved});
+        renderLogs();
+        document.getElementById('wQty').value='';
+        alert(`Logged! CO₂ tracked: ${d.environmental_impact.co2_saved} kg`);
+    }
+}
+new Chart(document.getElementById('wasteChart'),{
+    type:'bar',
+    data:{labels:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],datasets:[{label:'Waste (kg)',data:[12,8,15,6,9,18,7],backgroundColor:'rgba(16,185,129,0.4)',borderColor:'#10b981',borderWidth:1.5,borderRadius:4}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#8b949e'},grid:{color:'#21262d'}},y:{ticks:{color:'#8b949e'},grid:{color:'#21262d'}}}}
+});
+renderLogs();
+</script>
+
+<!-- ── Nova Dine Unified Footer ── -->
+<footer class="nova-footer">
+    <div class="footer-grid">
+        <div class="footer-brand">
+            <div class="footer-brand-name">
+                <i class="fas fa-utensils"></i> Nova Dine
+            </div>
+            <p>AI-powered restaurant inventory management. Predict demand, reduce waste, and streamline operations with intelligent automation.</p>
+            <div class="footer-social">
+                <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#" title="GitHub"><i class="fab fa-github"></i></a>
+                <a href="#" title="Email"><i class="fas fa-envelope"></i></a>
+            </div>
+        </div>
+        <div class="footer-col">
+            <h4>Platform</h4>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/inventory">Inventory</a>
+            <a href="/menu-upload">Menu Upload</a>
+            <a href="/chat">AI Chat</a>
+            <a href="/analytics">Analytics</a>
+        </div>
+        <div class="footer-col">
+            <h4>Operations</h4>
+            <a href="/orders">Orders</a>
+            <a href="/suppliers">Suppliers</a>
+            <a href="/recipes">Recipes</a>
+            <a href="/waste-management">Waste Mgmt</a>
+            <a href="/staff">Staff</a>
+        </div>
+        <div class="footer-col">
+            <h4>Support</h4>
+            <a href="/help">Help Center</a>
+            <a href="/settings">Settings</a>
+            <a href="/reports">Reports</a>
+            <a href="#">Documentation</a>
+            <a href="#">API Reference</a>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <span>&copy; 2026 Nova Dine Systems &mdash; AI Backbone Layer. All rights reserved.</span>
+        <div class="footer-status">
+            <span class="status-dot"></span>
+            <span>All systems operational</span>
+        </div>
+    </div>
+</footer>
+
+</body></html>

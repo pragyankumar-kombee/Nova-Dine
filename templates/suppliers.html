@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta name="description" content="Nova Dine - The ultimate operational Backbone Layer for restaurant management. Predict inventory, run analysis, and elevate dining experiences with intelligent AI.">
+    <meta name="keywords" content="Restaurant AI, Inventory Management, Menu Analysis, Food Cost Optimization, Culina, Culinary AI">
+    <!-- Static Assets -->
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="/static/js/main.js" defer></script>
+
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suppliers — Nova Dine Kitchen</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        
+        :root {
+            --pure-white: #ffffff;
+            --off-white: #f9fafb;
+            --gray-50: #f3f4f6;
+            --gray-100: #e5e7eb;
+            --gray-700: #374151;
+            --gray-900: #111827;
+            --accent: #6366f1;
+            --accent-soft: #e0e7ff;
+            
+            /* Old variables mapped to light theme for compatibility */
+            --bg: #ffffff;
+            --bg-primary: #f9fafb;
+            --bg2: #f3f4f6;
+            --bg-secondary: #ffffff;
+            --card: #ffffff;
+            --bg-card: #ffffff;
+            --bg-hover: #f3f4f6;
+            --border: #e5e7eb;
+            --green: #10b981;
+            --amber: #f59e0b;
+            --red: #ef4444;
+            --text: #111827;
+            --text-primary: #111827;
+            --text-secondary: #374151;
+            --muted: #6b7280;
+            --text-muted: #6b7280;
+            --user-bubble: #6366f1;
+            --bot-bubble: #f3f4f6;
+            --accent2: #10b981;
+            --accent3: #f59e0b;
+            --accent-red: #ef4444;
+            --accent-glow: rgba(99,102,241,0.1);
+        }
+
+        *{box-sizing:border-box;margin:0;padding:0;}body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);}
+        .topbar{display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:56px;background:var(--bg2);border-bottom:1px solid var(--border);}
+        .brand{font-weight:700;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:10px;}
+        .brand-icon{width:32px;height:32px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border-radius:8px;display:flex;align-items:center;justify-content:center;}
+        .nav-links a{padding:6px 12px;border-radius:6px;color:var(--muted);text-decoration:none;font-size:0.83rem;}
+        .nav-links a:hover,.nav-links a.active{background:#21262d;color:var(--text);}
+        .main{padding:24px;max-width:1200px;margin:0 auto;}
+        .page-title{font-size:1.3rem;font-weight:700;margin-bottom:4px;}
+        .page-sub{color:var(--muted);font-size:0.85rem;margin-bottom:24px;}
+        .supplier-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;}
+        .supplier-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px;transition:all 0.2s;}
+        .supplier-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+        .sup-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+        .sup-name{font-weight:700;font-size:1rem;}
+        .sup-cat{font-size:0.78rem;color:var(--muted);margin-bottom:10px;}
+        .stars{color:#f59e0b;font-size:13px;}
+        .sup-info{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0;}
+        .info-item{background:var(--bg2);border-radius:8px;padding:8px 10px;font-size:0.78rem;}
+        .info-label{color:var(--muted);margin-bottom:2px;}
+        .info-val{font-weight:600;}
+        .tags{display:flex;flex-wrap:wrap;gap:5px;margin:10px 0;}
+        .tag{background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.3);color:#a5b4fc;padding:2px 8px;border-radius:20px;font-size:0.72rem;}
+        .btn{padding:7px 14px;border-radius:8px;border:none;font-family:'Inter',sans-serif;font-weight:500;cursor:pointer;font-size:0.8rem;transition:all 0.2s;}
+        .btn-primary{background:linear-gradient(135deg,#6366f1,#8b5cf6);color:white;}
+        .btn-ghost{background:transparent;border:1px solid var(--border);color:var(--muted);}
+        .btn-ghost:hover{background:var(--bg2);color:var(--text);}
+        .badge-active{background:rgba(16,185,129,0.15);color:#34d399;border:1px solid rgba(16,185,129,0.3);padding:3px 10px;border-radius:20px;font-size:0.72rem;font-weight:600;}
+    </style>
+</head>
+<body>
+
+<!-- UNIFIED HEADER -->
+<header class="main-header">
+    <div class="header-container">
+        <a href="/" class="brand-logo">
+            <i class="fas fa-utensils" style="color:#6366f1;"></i> Nova Dine
+        </a>
+        <nav class="main-nav">
+            <a href="/" class="nav-link">Home</a>
+            <a href="/dashboard" class="nav-link">Dashboard</a>
+            <a href="/menu-upload" class="nav-link">Menu Upload</a>
+            <a href="/inventory" class="nav-link">Inventory</a>
+            <a href="/chat" class="nav-link">AI Chat</a>
+            <div class="nav-dropdown">
+                <button class="nav-link dropdown-toggle">Operations <i class="fas fa-chevron-down" style="font-size:0.7rem;margin-left:4px;"></i></button>
+                <div class="dropdown-menu">
+                    <a href="/analytics">Analytics</a>
+                    <a href="/reports">Reports</a>
+                    <a href="/orders">Orders</a>
+                    <a href="/suppliers">Suppliers</a>
+                    <a href="/recipes">Recipes</a>
+                    <a href="/waste-management">Waste Mgmt</a>
+                    <a href="/staff">Staff</a>
+                </div>
+            </div>
+            <a href="/settings" class="nav-link">Settings</a>
+            <a href="/help" class="nav-link">Help</a>
+        </nav>
+        <button class="mobile-menu-btn"><i class="fas fa-bars"></i></button>
+    </div>
+</header>
+
+<div class="main">
+    <div class="page-title">Supplier Management</div>
+    <div class="page-sub">Manage your ingredient suppliers and procurement contacts</div>
+    <div class="supplier-grid" id="supplierGrid"></div>
+</div>
+
+    </div>
+
+    <script>
+const suppliers = [
+    {name:'Fresh Farms Produce',cat:'Vegetables & Fruits',rating:4.8,delivery:'1-2 days',minOrder:'₹2,000',status:'active',products:['Tomatoes','Onions','Lettuce','Bell Peppers','Garlic']},
+    {name:'Quality Meats Co.',cat:'Meat & Poultry',rating:4.6,delivery:'2-3 days',minOrder:'₹5,000',status:'active',products:['Chicken Breast','Beef','Pork','Lamb','Turkey']},
+    {name:'Dairy Delight',cat:'Dairy Products',rating:4.9,delivery:'1 day',minOrder:'₹1,500',status:'active',products:['Milk','Cheese','Butter','Cream','Yogurt','Ice']},
+    {name:'Global Grains',cat:'Grains & Bakery',rating:4.5,delivery:'2-3 days',minOrder:'₹1,000',status:'active',products:['Basmati Rice','Flour','Bread','Pasta','Oats']},
+];
+const grid = document.getElementById('supplierGrid');
+suppliers.forEach(s=>{
+    const stars = Array(5).fill(0).map((_,i)=>`<i class="fas fa-star${i<Math.floor(s.rating)?'':'-half-alt'}"></i>`).slice(0,5).join('');
+    const card = document.createElement('div');
+    card.className = 'supplier-card';
+    card.innerHTML = `
+        <div class="sup-header"><span class="sup-name">${s.name}</span><span class="badge-active">${s.status}</span></div>
+        <div class="sup-cat">${s.cat}</div>
+        <div class="stars">${'&#9733;'.repeat(Math.floor(s.rating))}${'&#9734;'.repeat(5-Math.floor(s.rating))} <span style="color:var(--muted);font-size:0.78rem;">${s.rating}</span></div>
+        <div class="sup-info">
+            <div class="info-item"><div class="info-label">Delivery Time</div><div class="info-val">${s.delivery}</div></div>
+            <div class="info-item"><div class="info-label">Min. Order</div><div class="info-val">${s.minOrder}</div></div>
+        </div>
+        <div class="tags">${s.products.map(p=>`<span class="tag">${p}</span>`).join('')}</div>
+        <div style="display:flex;gap:8px;margin-top:12px;">
+            <button class="btn btn-primary" onclick="alert('Order form would open here.')"><i class="fas fa-shopping-cart"></i> Place Order</button>
+            <button class="btn btn-ghost"><i class="fas fa-history"></i> History</button>
+            <button class="btn btn-ghost"><i class="fas fa-phone"></i> Contact</button>
+        </div>`;
+    grid.appendChild(card);
+});
+</script>
+
+<!-- ── Nova Dine Unified Footer ── -->
+<footer class="nova-footer">
+    <div class="footer-grid">
+        <div class="footer-brand">
+            <div class="footer-brand-name">
+                <i class="fas fa-utensils"></i> Nova Dine
+            </div>
+            <p>AI-powered restaurant inventory management. Predict demand, reduce waste, and streamline operations with intelligent automation.</p>
+            <div class="footer-social">
+                <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#" title="GitHub"><i class="fab fa-github"></i></a>
+                <a href="#" title="Email"><i class="fas fa-envelope"></i></a>
+            </div>
+        </div>
+        <div class="footer-col">
+            <h4>Platform</h4>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/inventory">Inventory</a>
+            <a href="/menu-upload">Menu Upload</a>
+            <a href="/chat">AI Chat</a>
+            <a href="/analytics">Analytics</a>
+        </div>
+        <div class="footer-col">
+            <h4>Operations</h4>
+            <a href="/orders">Orders</a>
+            <a href="/suppliers">Suppliers</a>
+            <a href="/recipes">Recipes</a>
+            <a href="/waste-management">Waste Mgmt</a>
+            <a href="/staff">Staff</a>
+        </div>
+        <div class="footer-col">
+            <h4>Support</h4>
+            <a href="/help">Help Center</a>
+            <a href="/settings">Settings</a>
+            <a href="/reports">Reports</a>
+            <a href="#">Documentation</a>
+            <a href="#">API Reference</a>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <span>&copy; 2026 Nova Dine Systems &mdash; AI Backbone Layer. All rights reserved.</span>
+        <div class="footer-status">
+            <span class="status-dot"></span>
+            <span>All systems operational</span>
+        </div>
+    </div>
+</footer>
+
+</body></html>

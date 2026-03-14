@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta name="description" content="Nova Dine - The ultimate operational Backbone Layer for restaurant management. Predict inventory, run analysis, and elevate dining experiences with intelligent AI.">
+    <meta name="keywords" content="Restaurant AI, Inventory Management, Menu Analysis, Food Cost Optimization, Culina, Culinary AI">
+    <!-- Static Assets -->
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="/static/js/main.js" defer></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Management - Nova Dine</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+
+        :root {
+            --pure-white: #ffffff;
+            --off-white: #f9fafb;
+            --gray-50: #f3f4f6;
+            --gray-100: #e5e7eb;
+            --gray-700: #374151;
+            --gray-900: #111827;
+            --accent: #6366f1;
+            --accent-soft: #e0e7ff;
+            
+            /* Old variables mapped to light theme for compatibility */
+            --bg: #ffffff;
+            --bg-primary: #f9fafb;
+            --bg2: #f3f4f6;
+            --bg-secondary: #ffffff;
+            --card: #ffffff;
+            --bg-card: #ffffff;
+            --bg-hover: #f3f4f6;
+            --border: #e5e7eb;
+            --green: #10b981;
+            --amber: #f59e0b;
+            --red: #ef4444;
+            --text: #111827;
+            --text-primary: #111827;
+            --text-secondary: #374151;
+            --muted: #6b7280;
+            --text-muted: #6b7280;
+            --user-bubble: #6366f1;
+            --bot-bubble: #f3f4f6;
+            --accent2: #10b981;
+            --accent3: #f59e0b;
+            --accent-red: #ef4444;
+            --accent-glow: rgba(99,102,241,0.1);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--off-white);
+            color: var(--gray-900);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .container { flex: 1; }
+            background: var(--pure-white);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,.1);
+            margin-top: 30px;
+        }
+        .filter-section {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .low-stock-row {
+            background-color: #fff3cd;
+        }
+        .badge-stock {
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+        }
+        .badge-low {
+            background: #dc3545;
+            color: var(--pure-white);
+        }
+        .badge-ok {
+            background: #28a745;
+            color: var(--pure-white);
+        }
+    </style>
+</head>
+<body>
+    
+<!-- UNIFIED HEADER -->
+<header class="main-header">
+    <div class="header-container">
+        <a href="/" class="brand-logo">
+            <i class="fas fa-utensils" style="color:#6366f1;"></i> Nova Dine
+        </a>
+        <nav class="main-nav">
+            <a href="/" class="nav-link">Home</a>
+            <a href="/dashboard" class="nav-link">Dashboard</a>
+            <a href="/menu-upload" class="nav-link">Menu Upload</a>
+            <a href="/inventory" class="nav-link">Inventory</a>
+            <a href="/chat" class="nav-link">AI Chat</a>
+            <div class="nav-dropdown">
+                <button class="nav-link dropdown-toggle">Operations <i class="fas fa-chevron-down" style="font-size:0.7rem;margin-left:4px;"></i></button>
+                <div class="dropdown-menu">
+                    <a href="/analytics">Analytics</a>
+                    <a href="/reports">Reports</a>
+                    <a href="/orders">Orders</a>
+                    <a href="/suppliers">Suppliers</a>
+                    <a href="/recipes">Recipes</a>
+                    <a href="/waste-management">Waste Mgmt</a>
+                    <a href="/staff">Staff</a>
+                </div>
+            </div>
+            <a href="/settings" class="nav-link">Settings</a>
+            <a href="/help" class="nav-link">Help</a>
+        </nav>
+        <button class="mobile-menu-btn"><i class="fas fa-bars"></i></button>
+    </div>
+</header>
+
+
+    <div class="container">
+        <div class="inventory-container">
+            <h2>Inventory Management</h2>
+            <p class="text-muted">View and manage your current stock levels</p>
+
+            <!-- Filters -->
+            <div class="filter-section">
+                <div class="row">
+                    <div class="col-md-3">
+                        <input type="text" class="form-control" id="searchInput" 
+                               placeholder="Search...">
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-control" id="categoryFilter">
+                            <option value="">All Categories</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <select class="form-control" id="stockFilter">
+                            <option value="all">All Items</option>
+                            <option value="low">Low Stock</option>
+                            <option value="ok">Stock OK</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <select class="form-control" id="menuFilter">
+                            <option value="all">Full Inventory</option>
+                            <option value="menu">In Latest Menu</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-primary w-100" onclick="loadInventory()">
+                            Refresh
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Inventory Stats -->
+            <div class="row mb-3">
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6>Total Items</h6>
+                            <h3 id="totalCount">-</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6>Low Stock Items</h6>
+                            <h3 id="lowStockCount">-</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6>Categories</h6>
+                            <h3 id="categoryCount">-</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6>Total Value</h6>
+                            <h3 id="totalValue">-</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Inventory Table -->
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Product Name</th>
+                            <th>Category</th>
+                            <th>Current Stock</th>
+                            <th>Unit</th>
+                            <th>Reorder Level</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inventoryTable">
+                        <tr>
+                            <td colspan="8" class="text-center">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            <nav>
+                <ul class="pagination justify-content-center" id="pagination">
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#">Previous</a>
+                    </li>
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">Next</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    <script>
+        let inventoryData = [];
+        let menuIngredients = [];
+
+        async function loadMenuIngredients() {
+            try {
+                const res = await fetch('/api/menu/latest?user_id=1');
+                const data = await res.json();
+                if (data.success && data.data) {
+                    const dishes = data.data.dishes || [];
+                    let ings = [];
+                    dishes.forEach(d => {
+                        if(d.ingredients) ings.push(...d.ingredients.map(i => i.toLowerCase()));
+                    });
+                    menuIngredients = [...new Set(ings)];
+                }
+            } catch (e) {
+                console.error("No menu found to filter against.");
+            }
+        }
+
+        async function loadInventory() {
+            try {
+                await loadMenuIngredients();
+                const response = await fetch('/api/inventory/stock');
+                const data = await response.json();
+                
+                if (data.success) {
+                    inventoryData = data.stock;
+                    displayInventory(data.stock);
+                    updateStats(data.stock);
+                    populateCategories(data.stock);
+                }
+            } catch (error) {
+                console.error('Error loading inventory:', error);
+                document.getElementById('inventoryTable').innerHTML = 
+                    '<tr><td colspan="8" class="text-center text-danger">Error loading inventory</td></tr>';
+            }
+        }
+
+        function displayInventory(data) {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const categorySelect = document.getElementById('categoryFilter');
+            const category = categorySelect ? categorySelect.value : "";
+            const stockFilterSelect = document.getElementById('stockFilter');
+            const stockFilter = stockFilterSelect ? stockFilterSelect.value : "all";
+            const menuFilterSelect = document.getElementById('menuFilter');
+            const menuFilter = menuFilterSelect ? menuFilterSelect.value : "all";
+
+            const filtered = data.filter(item => {
+                const matchesSearch = item.name.toLowerCase().includes(searchTerm);
+                const matchesCategory = !category || item.category === category;
+                const matchesStock = stockFilter === 'all' || 
+                    (stockFilter === 'low' && item.needs_reorder) ||
+                    (stockFilter === 'ok' && !item.needs_reorder);
+                    
+                let matchesMenu = true;
+                if (menuFilter === 'menu') {
+                    matchesMenu = menuIngredients.some(ing => item.name.toLowerCase().includes(ing) || ing.includes(item.name.toLowerCase()));
+                }
+                
+                return matchesSearch && matchesCategory && matchesStock && matchesMenu;
+            });
+
+            document.getElementById('totalCount').textContent = filtered.length;
+            
+            const tbody = document.getElementById('inventoryTable');
+            if (filtered.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" class="text-center">No items found</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = filtered.map(item => `
+                <tr class="${item.needs_reorder ? 'low-stock-row' : ''}">
+                    <td>${item.id}</td>
+                    <td><strong>${item.name}</strong></td>
+                    <td>${item.category}</td>
+                    <td>${parseFloat(item.current_stock).toFixed(1)}</td>
+                    <td>${item.unit}</td>
+                    <td>${parseFloat(item.reorder_level).toFixed(1)}</td>
+                    <td>
+                        ${item.needs_reorder ? 
+                            '<span class="badge-stock badge-low">Low Stock</span>' : 
+                            '<span class="badge-stock badge-ok">OK</span>'
+                        }
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary" 
+                                onclick="updateStock(${item.id}, ${item.current_stock})">
+                            Update
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function updateStats(data) {
+            const lowStock = data.filter(item => item.needs_reorder).length;
+            document.getElementById('lowStockCount').textContent = lowStock;
+            
+            const categories = new Set(data.map(item => item.category));
+            document.getElementById('categoryCount').textContent = categories.size;
+            
+            // Mock total value in INR based on item quantities
+            document.getElementById('totalValue').textContent = '₹' + 
+                (data.reduce((sum, item) => sum + (item.current_stock * 85), 0)).toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        }
+
+        function populateCategories(data) {
+            const categories = [...new Set(data.map(item => item.category))];
+            const select = document.getElementById('categoryFilter');
+            if (!select) return;
+            select.innerHTML = '<option value="">All Categories</option>' +
+                categories.map(cat => `<option value="${cat}">${cat}</option>`).join('');
+        }
+
+        function updateStock(id, currentStock) {
+            const newStock = prompt('Enter new stock level:', currentStock);
+            if (newStock !== null) {
+                // Here you would call an API to update the stock
+                alert('Stock update feature - API endpoint to be implemented');
+            }
+        }
+
+        // Event listeners
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) searchInput.addEventListener('input', () => displayInventory(inventoryData));
+        
+        const categoryFilter = document.getElementById('categoryFilter');
+        if (categoryFilter) categoryFilter.addEventListener('change', () => displayInventory(inventoryData));
+        
+        const stockFilter = document.getElementById('stockFilter');
+        if (stockFilter) stockFilter.addEventListener('change', () => displayInventory(inventoryData));
+
+        const menuFilter = document.getElementById('menuFilter');
+        if (menuFilter) menuFilter.addEventListener('change', () => displayInventory(inventoryData));
+
+        // Load inventory on page load
+        loadInventory();
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- ── Nova Dine Unified Footer ── -->
+<footer class="nova-footer">
+    <div class="footer-grid">
+        <div class="footer-brand">
+            <div class="footer-brand-name">
+                <i class="fas fa-utensils"></i> Nova Dine
+            </div>
+            <p>AI-powered restaurant inventory management. Predict demand, reduce waste, and streamline operations with intelligent automation.</p>
+            <div class="footer-social">
+                <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#" title="GitHub"><i class="fab fa-github"></i></a>
+                <a href="#" title="Email"><i class="fas fa-envelope"></i></a>
+            </div>
+        </div>
+        <div class="footer-col">
+            <h4>Platform</h4>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/inventory">Inventory</a>
+            <a href="/menu-upload">Menu Upload</a>
+            <a href="/chat">AI Chat</a>
+            <a href="/analytics">Analytics</a>
+        </div>
+        <div class="footer-col">
+            <h4>Operations</h4>
+            <a href="/orders">Orders</a>
+            <a href="/suppliers">Suppliers</a>
+            <a href="/recipes">Recipes</a>
+            <a href="/waste-management">Waste Mgmt</a>
+            <a href="/staff">Staff</a>
+        </div>
+        <div class="footer-col">
+            <h4>Support</h4>
+            <a href="/help">Help Center</a>
+            <a href="/settings">Settings</a>
+            <a href="/reports">Reports</a>
+            <a href="#">Documentation</a>
+            <a href="#">API Reference</a>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <span>&copy; 2026 Nova Dine Systems &mdash; AI Backbone Layer. All rights reserved.</span>
+        <div class="footer-status">
+            <span class="status-dot"></span>
+            <span>All systems operational</span>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>
